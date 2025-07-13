@@ -1,0 +1,345 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">-->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>{{ place.name }}</title>
+  <style>
+    #user-dropdown {
+      position: absolute;
+      top: 3rem;
+      right: 2rem;
+    }
+
+    .logo-font {
+      font-family: 'Pacifico', cursive;
+    }
+
+    .event-detail-container {
+      max-height: 100px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .event-detail-container.expanded {
+      max-height: none;
+    }
+
+    .see-more-button {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="fixed top-0 z-50 w-full px-8 text-[#594100]">
+    <div class="px-3 py-3 lg:px-5 lg:pl-3">
+      <div class="flex items-center justify-between p-2">
+        <div class="flex items-center justify-start rtl:justify-end">
+          <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
+            id="menu-icon" type="button"
+            class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg">
+              <path clip-rule="evenodd" fill-rule="evenodd"
+                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+              </path>
+            </svg>
+          </button>
+          <a href="{% url 'home' %}" class="flex ms-2 md:me-24">
+            <span class="logo-font self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">MyUni</span>
+          </a>
+        </div>
+        <div class="flex items-center">
+          <div class="flex items-center ms-3 justify-between gap-6">
+            <button class="border border-[#594100] p-2 px-4 rounded shadow-lg">
+              <a href="{% url 'home' %}" class="">แผนที่</a>
+            </button>
+            <button class="border border-[#594100] p-2 px-4 rounded shadow-lg">
+              <a href="{% url 'event_calendar' %}" class="">ปฏิทินกิจกรรม</a>
+            </button>
+        
+            <div>
+              <button type="button"
+                class="relative flex text-sm rounded-full focus:ring-4 focus:ring-gray-300"
+                aria-expanded="false" id="user-menu-button" data-dropdown-toggle="user-dropdown">
+                <span class="sr-only">Open user menu</span>
+                <img class="w-10 h-10 border border-gray-300 rounded-full" src="{{ profile.profileimg.url }}"
+                  alt="{{ profile.user.username }}">
+                {% if unread_notifications_count > 0 %}
+                <span
+                  class="absolute top-0 right-0 transform translate-x-2 -translate-y-2 bg-red-500 text-white rounded-full px-1.5 py-0.5 text-xs">
+                  {{unread_notifications_count }}</span>
+                {% endif %}
+              </button>
+            </div>
+            <div
+              class="z-50 hidden my-4 text-base list-none bg-white border border-[#594100]  divide-y divide-gray-100 rounded shadow"
+              id="user-dropdown">
+              <div class="px-4 py-3" role="none">
+                <a href="{% url 'profile' user.username %}">
+                  <p class="text-sm" role="none">{{ profile.user.username }}</p>
+                </a>
+                <p class="text-sm font-medium truncate" role="none">{{ profile.user.email }}</p>
+              </div>
+              <ul class="py-1" role="none">
+                <li>
+                  <a href="{% url 'notifications' %}" class="block px-4 py-2 text-sm hover:bg-[#FFEC9F]">
+                    การแจ้งเตือน
+                    {% if unread_notifications_count %}
+                    <span
+                      class="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-white bg-red-500 rounded-full">
+                      {% if unread_notifications_count > 0 %}
+                      {{ unread_notifications_count }}
+                      {% endif %}
+                    </span>
+                    {% endif %}
+                  </a>
+                </li>
+                <li>
+                  <a href="{% url 'profile' profile.user.username %}" class="block px-4 py-2 text-sm hover:bg-[#FFEC9F]"
+                    role="menuitem">ตั้งค่าโปรไฟล์</a>
+                </li>
+                <li>
+                  <a href="{% url 'logout_user' %}" class="block px-4 py-2 text-sm hover:text-white hover:bg-red-600"
+                    role="menuitem">ออกจากระบบ</a>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <aside id="logo-sidebar"
+    class="fixed top-0 left-0 z-40 w-64 h-screen pt-24 transition-transform -translate-x-full bg-[#FFEC9E] text-[#594100] border-r border-white sm:translate-x-0"
+    aria-label="Sidebar">
+    <div class="h-full px-3 pb-4 overflow-y-auto">
+      <ul class="space-y-2 font-medium">
+        <li>
+          <a href="{% url 'home' %}" class="flex items-center p-2 rounded hover:bg-[#FBF8EF] group">
+            <i class="fas fa-map"></i>
+            <span class="ms-3">แผนที่</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'profile' profile.user.username %}"
+            class="flex items-center p-2 rounded hover:bg-[#FBF8EF] group">
+            <i class="fas fa-user"></i>
+            <span class="flex-1 ms-3 whitespace-nowrap">โปรไฟล์</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'notifications' %}" class="flex items-center p-2 rounded hover:bg-[#FBF8EF] group">
+            <i class="fas fa-bell"></i>
+            <span class="flex-1 ms-3 whitespace-nowrap">การแจ้งเตือน</span>
+            {% if unread_notifications_count %}
+            <span
+              class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white bg-red-500 rounded-full">
+              {% if unread_notifications_count > 0 %}
+              {{ unread_notifications_count }}
+              {% endif %}
+            </span>
+            {% endif %}
+          </a>
+        </li>
+        <!-- <li>
+            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+              <i class="fas fa-user-friends"></i>
+              <span class="flex-1 ms-3 whitespace-nowrap">Follower</span>
+            </a>
+        </li> -->
+        <li>
+          <a href="{% url 'create_post' place_id=place.id %}"
+            class="flex items-center p-2 rounded hover:bg-[#FBF8EF] group">
+            <i class="fas fa-pencil-alt"></i>
+            <span class="flex-1 ms-3 whitespace-nowrap">สร้างโพสต์</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'create_event' place_id=place.id %}"
+            class="flex items-center p-2 rounded hover:bg-[#FBF8EF] group">
+            <i class="fas fa-calendar-alt"></i>
+            <span class="flex-1 ms-3 whitespace-nowrap">สร้างกิจกรรม</span>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'logout_user' %}" class="flex items-center p-2 rounded hover:bg-[#FBF8EF] group">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="flex-1 ms-3 whitespace-nowrap">ออกจากระบบ</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <div class="p-4 sm:ml-64">
+    <div class="p-4 mt-14">
+      <header class="text-[#594100]">
+        <div class="relative px-8 pt-8 pb-4 text-center ">
+          <!-- {% if place.images.all %}
+          <div class="relative">
+            <img src="{{ place.images.first.image.url }}" alt="{{ place.name }}" class="w-full h-64">
+          </div>
+        {% endif %} -->
+          <h1 class="text-3xl font-bold">{{ place.name }}</h1>
+          <p class="text-md mt-4">{{ place.detail }}</p>
+        </div>
+      </header>
+
+      <main class="text-[#594100]">
+        <!-- Events show -->
+        <div class="relative px-6 pt-8 pb-4 lg:px-8 lg:pt-8 lg:pb-4">
+          {% if events %}
+          <div class="relative mx-auto rounded max-w-7xl bg-[#FBF8EF]">
+            <div class="text-left rounded py-4 bg-[#FFEC9E]">
+              <h2 class="text-xl font-bold tracking-tight ps-3"><i class="fas fa-calendar-alt mr-2"></i>กิจกรรม</h2>
+            </div>
+            <div class="mx-auto grid max-w-lg gap-5 p-3 lg:max-w-none lg:grid-cols-3">
+              {% for event in events %}
+              <div class="flex flex-col overflow-hidden shadow-lg rounded">
+                <div class="flex-shrink-0">
+                  {% if event.images.all %}
+                  <img class="h-48 w-full object-cover" src="{{ event.images.first.image.url }}" alt="">
+                  {% else %}
+                  <img class="h-48 w-full object-cover"
+                    src="https://www.iash.ed.ac.uk/sites/default/files/default_images/default-event.png" alt="">
+                  {% endif %}
+                </div>
+
+                <div class="flex flex-1 flex-col justify-between bg-white p-4">
+                  <div class="flex-1">
+                    <a href="{% url 'event_details' event.id %}" class="block">
+                      <p class="text-lg font-semibold">{{ event.title }}</p>
+                      <div class="event-detail-container">
+                        <p class="mt-2 text-base event-detail">{{ event.detail }}</p>
+                      </div>
+                      <button class="see-more-button text-sm text-gray-400">
+                        คลิกเพื่อดูเพิ่มเติม...
+                      </button>
+                    </a>
+                  </div>
+                  <div class="mt-2 flex items-center">
+                    <div class="flex-shrink-0">
+                      <a href="{% url 'profile' event.user.username %}">
+                        <span class="sr-only">{{ event.user.username }}</span>
+                        <img class="h-10 w-10 rounded-full" src="{{ event.user.profile.profileimg.url }}"
+                          alt="{{ event.user.username }}">
+                      </a>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm font-medium text-gray-900">
+                        <a href="{% url 'profile' event.user.username %}">{{ event.user.username }}</a>
+                      </p>
+                      <div class="flex space-x-1 text-xs text-gray-600">
+                        <p>Date: {{ event.start_date }} - {{ event.end_date }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          {% if posts %}
+          <div class="relative my-4 mx-auto max-w-7xl rounded text-left bg-[#FBF8EF]">
+            <div class="text-left rounded py-4 bg-[#FFEC9E]">
+              <h2 class="text-xl font-bold tracking-tight ps-3"><i class="fas fa-edit mr-2"></i>Posts</h2>
+            </div>
+            <!-- {% if posts %} -->
+            <div class="py-4">
+              <ul>
+                {% for post in posts %}
+                  <div class="bg-white mx-4 p-4 py-2 mb-2">
+                    <li class=" text-xl"><a href="{% url 'post_content' post.id  %}">{{ post.title }}</a></li>
+
+                    <div id="user" class="mt-6 flex items-center">
+                      <div class="flex-shrink-0">
+                        <a href="{% url 'profile' post.user.username %}">
+                          <span class="sr-only">{{ post.user.username }}</span>
+                          <img class="h-10 w-10 rounded-full" src="{{ post.user.profile.profileimg.url }}"
+                            alt="{{ post.user.username }}">
+                        </a>
+                      </div>
+                      <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900">
+                          <a href="{% url 'profile' post.user.username %}" class="hover:underline">
+                            {{post.user.username }}</a>
+                        </p>
+                        <div class="flex space-x-1 text-sm text-gray-600">
+                          <p>{{ post.created_at }}</p>
+                        </div>
+                      </div>
+                      <div id="likes-comments" class="ml-auto flex items-center gap-4">
+                        <div id="likes" class="flex mr-2 text-sm mr-3">
+                          <svg fill="none" viewBox="0 0 24 24" class="w-4 h-4 mr-1" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                          </svg>
+                          <span>{{ post.likes.count }}</span>
+                        </div>
+                        <div id="comments" class="flex mr-2 text-sm mr-8">
+                          <svg fill="none" viewBox="0 0 24 24" class="w-4 h-4 mr-1" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                          </svg>
+                          <span>{{ post.comment_count }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                {% endfor %}
+              </ul>
+            </div>
+            <!-- {% endif %} -->
+          </div>
+          {% endif %}
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+
+    const menuIcon = document.getElementById("menu-icon");
+    const sidebar = document.getElementById("logo-sidebar");
+
+    menuIcon.addEventListener("click", function () {
+      sidebar.classList.toggle("-translate-x-full");
+    });
+
+    const profileImageButton = document.getElementById('user-menu-button');
+    const userDropdownMenu = document.getElementById('user-dropdown');
+
+    profileImageButton.addEventListener('click', function () {
+      userDropdownMenu.classList.toggle('hidden');
+    });
+
+    //see more button
+    document.querySelectorAll('.see-more-button').forEach(button => {
+      button.addEventListener('.click', function () {
+        const eventDetailContainer = this.previousElementSibling;
+        eventDetailContainer.classList.toggle('expanded');
+        this.textContent = eventDetailContainer.classList.contains('expanded') ? 'See Less' : 'See More';
+      });
+    });
+
+  </script>
+</body>
+
+</html>

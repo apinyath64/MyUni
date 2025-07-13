@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event</title>
+</head>
+<body>
+    <h1>All Event</h1>
+    <ul>
+        {% for event in events_data %}
+        <li>
+            <h2>{{ event.title }}</h2>
+            <p><strong>Detail:</strong> {{ event.detail }}</p>
+            <p><strong>Start Date:</strong> {{ event.date.0 }}</p>
+            <p><strong>End Date:</strong> {{ event.date.1 }}</p>
+            <div>
+                <h3>Images</h3>
+                <ul>
+                    {% for image_url in event.image_urls %}
+                        <li><img src="{{ image_url }}" alt="Event Image"></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

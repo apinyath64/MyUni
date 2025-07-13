@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Event edit</title>
+    <style>
+        #user-dropdown {
+            position: absolute;
+            top: 3rem;
+            right: 2rem;
+        }
+        .logo-font {
+            font-family: 'Pacifico', cursive;
+        }
+    </style>
+</head>
+<body class="bg-[#FFEC9E]">
+
+    <div class="md:h-screen flex items-center justify-center text-[#594100]">
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:lg:py-24">
+
+            <div class="w-full bg-white border border-[#594100] rounded md:mt-0 sm:max-w-md xl:p-0">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight  md:text-2xl text-center">
+                        แก้ไขกิจกรรมนี้
+                    </h1>
+                    <form method="post" enctype="multipart/form-data" class="space-y-4">
+                        {% csrf_token %}
+                        <div class="mb-2">
+                            <label for="title" class="block text-sm font-medium">หัวข้อ:</label>
+                            <input type="text" id="title" name="title" value="{{ event.title }}" required class="mt-1 p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] rounded">
+                        </div>
+                        <div class="mb-2">
+                            <label for="detail" class="block text-sm font-medium">รายละเอียด:</label>
+                            <textarea id="detail" name="detail" required rows="3" class="mt-1 p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] rounded">{{ event.detail }}</textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-x-4 mb-2">
+                            <div>
+                                <label for="start_date" class="block text-sm font-medium">เริ่ม:</label>
+                                <input type="datetime-local" id="start_date" name="start_date" value="{{ event.start_date|date:'Y-m-d\\TH:i' }}" required class="mt-1 p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] rounded">
+                            </div>
+                            <div>
+                                <label for="end_date" class="block text-sm font-medium">สิ้นสุด:</label>
+                                <input type="datetime-local" id="end_date" name="end_date" required value="{{ event.end_date|date:'Y-m-d\\TH:i' }}" class="mt-1 p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] rounded">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="event_image" class="block text-sm font-medium">เพิ่มรูปภาพ:</label>
+                            <input type="file" id="event_image" name="event_image" class="mt-1 p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] rounded">
+                            {% if event.image %}
+                                <p class="mt-2 text-sm">Current Image: <img src="{{ event.image.url }}" alt="Event Image" class="h-32"></p>
+                            {% endif %}
+                        </div>
+                        <div class="flex justify-between mt-4">
+                            <button type="submit" class="py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-[#594100] focus:outline-none focus:ring-2 focus:ring-offset-2">บันทึกการเปลี่ยนแปลง</button>
+                            <a href="{{ referer_url }}" class="hover:underline py-2">ย้อนกลับ</a>
+                        </div>
+                    </form>
+                    
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script>
+        const profileImageButton = document.getElementById('user-menu-button');
+            const userDropdownMenu = document.getElementById('user-dropdown');
+    
+            profileImageButton.addEventListener('click', function() {
+                userDropdownMenu.classList.toggle('hidden');
+            });
+    </script>
+</body>
+</html>

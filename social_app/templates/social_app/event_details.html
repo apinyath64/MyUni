@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event detail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  
+  <style>
+    #user-dropdown {
+      position: absolute;
+      top: 3rem;
+      right: 2rem;
+    }
+
+    .logo-font {
+      font-family: 'Pacifico', cursive;
+    }
+  </style>
+</head>
+
+<body class="bg-[#FBF8EF]">
+  <nav class="fixed top-0 z-50 px-8 py-2 w-full bg-[#FFEC9E] text-[#594100]">
+    <div class="px-3 py-3 lg:px-5 lg:pl-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center justify-start rtl:justify-end">
+          <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
+            id="menu-icon" type="button"
+            class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg">
+              <path clip-rule="evenodd" fill-rule="evenodd"
+                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+              </path>
+            </svg>
+          </button>
+          <a href="{% url 'home' %}" class="flex ms-2 md:me-24">
+            <span class="logo-font self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">MyUni</span>
+          </a>
+        </div>
+        <div class="flex items-center justify-between gap-4">
+          <a class="py-2 logo-font border border-[#594100] rounded p-2 px-4" href="{% url 'event_calendar' %}">
+            ปฏิทินกิจกรรม </a>
+          <div class="flex items-center ms-3">
+            <div>
+              <button type="button" class="flex text-sm rounded-full focus:ring-4 focus:ring-gray-300"
+                aria-expanded="false" id="user-menu-button" data-dropdown-toggle="user-dropdown">
+                <span class="sr-only">Open user menu</span>
+                <img class="w-10 h-10 rounded-full border border-gray-300" src="{{ user.profile.profileimg.url }}"
+                  alt="{{ profile.user.username }}">
+              </button>
+            </div>
+            <div
+              class="z-50 hidden my-4 text-base list-none bg-white border border-[#594100] divide-y divide-gray-100 rounded shadow"
+              id="user-dropdown">
+              <div class="px-4 py-3" role="none">
+                <p class="text-sm" role="none">{{ user.profile.user.username }}</p>
+                <p class="text-sm font-medium truncate" role="none">{{ user.profile.user.email }}</p>
+              </div>
+              <ul class="py-1" role="none">
+                <li>
+                  <a href="{% url 'profile' user.username %}" class="block px-4 py-2 text-sm hover:bg-[#FFEC9E]"
+                    role="menuitem">Settings</a>
+                </li>
+                <li>
+                  <a href="{% url 'logout_user' %}" class="block px-4 py-2 text-sm hover:text-white hover:bg-red-600"
+                    role="menuitem">Logout</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- content -->
+  <div class="container mx-auto px-12 pt-12 text-[#594100]">
+
+    <div class="clearfix mt-16">
+      <div class="flex">
+        <p class="text-2xl font-bold">{{ event.title }}</p>
+        {% if user.is_authenticated and event.user == user %}
+        <a class="py-2 px-2" href="{% url 'event_edit' event.id%}"><i class="fas fa-edit text-sm"> แก้ไข</i></a>
+        <a class="py-2 px-2" href="{% url 'event-delete' event.id %}"><i class="fas fa-trash-alt text-sm"> นำออก</i></a>
+        {% endif %}
+      </div>
+      <p class="pb-4 text-sm text-gray-500">From <span class="">{{ event.start_date }}</span> To <span>{{ event.end_date }}</span></p>
+      <hr class="my-2">
+      <p class="py-2">{{ event.detail }}</p>
+      {% if event.images.all %}
+      <div class="p-8">
+        {% for image in event.images.all %}
+        <img src="{{ image.image.url }}" alt="Event image" class="w-full"
+          style="max-height: 300px; max-width: 300px; object-fit: cover;">
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    <hr class="my-4">
+    <div class="flex justify-between items-center">
+      <h4 class="text-lg font-semibold">สมาชิกในกิจกรรมนี้</h4>
+      {% if user.is_authenticated and event.user == user %}
+      <a class="p-2 flex gap-2" href="{% url 'add_event_member' event.id %}">
+        <i class="fas fa-user-plus text-sm"></i>
+        <span>เพิ่มสมาชิก</span>
+      </a>
+      {% endif %}
+    </div>
+    {% if eventmember %}
+    <table class="min-w-full divide-y divide-gray-200 border border-[#594100] my-4 mb-12">
+      <thead class="bg-white">
+        <tr>
+          <th class="w-10 px-4 py-2 text-left text-base font-medium uppercase tracking-wider">ลำดับ</th>
+          <th class="px-4 py-2 text-left text-base font-medium uppercase tracking-wider">ชื่อ</th>
+          <th class="px-4 py-2 text-left text-base font-medium uppercase tracking-wider">อีเมลล์</th>
+          <th class="px-4 py-2 text-left text-base font-medium uppercase tracking-wider">ลบสมาชิก</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        {% for member in eventmember %}
+        <tr>
+          <td class="px-4 py-2 whitespace-nowrap">{{ forloop.counter }}</td>
+          <td class="px-4 py-2 whitespace-nowrap">{{ member.member.username }}</td>
+          <td class="px-4 py-2 whitespace-nowrap">{{ member.member.email }}</td>
+          <td class="px-4 py-2 whitespace-nowrap">
+            <a class="text-red-500 p-2 px-4"
+              href="{% url 'remove_member' event.id member.member.id %}">
+              <i class="fas fa-trash-alt text-sm"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="mt-4 text-center">ยังไม่มีสมาชิกในกิจกรรมนี้</p>
+    {% endif %}
+
+  </div>
+
+  <script>
+    const profileImageButton = document.getElementById('user-menu-button');
+    const userDropdownMenu = document.getElementById('user-dropdown');
+
+    profileImageButton.addEventListener('click', function () {
+      userDropdownMenu.classList.toggle('hidden');
+    });
+  </script>
+</body>
+
+</html>

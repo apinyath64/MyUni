@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <title>Post</title>
+  <style>
+    #user-dropdown {
+      position: absolute;
+      top: 3rem;
+      right: 2rem;
+    }
+  </style>
+
+
+</head>
+
+<body class="bg-[#FFEC9E]">
+
+
+  <div class="max-w-screen-md mx-auto mt-8 px-4 text-[#594100]">
+    <h1 class="mt-12 text-center text-2xl font-bold ">ลบความคิดเห็น</h1>
+
+    <div class="max-w-4xl mt-6 border border-[#594100] py-4 xl:px-12 rounded flex justify-center mx-auto bg-white">
+      <div class="w-full">
+        <div class="max-w-5xl mx-auto p-4">
+          <div class="flex items-center mb-4">
+            <div class="flex-shrink-0">
+              <a href="{% url 'profile' comment.user.username %}">
+                <img src="{{ comment.user.profile.profileimg.url }}" alt=""
+                  class="object-cover w-10 h-10 rounded-full" />
+              </a>
+            </div>
+            <div class="ml-4">
+              <a href="{% url 'profile' comment.user.username %}">
+                <h3 class="text-lg font-semibold text-gray-700">
+                  {{ comment.user.username }}
+                </h3>
+              </a>
+              <p class="text-xs text-gray-400">{{ comment.created_at }}</p>
+            </div>
+          </div>
+          <div>
+            <p class="text-base break-words">{{ comment.content }}</p>
+
+            {% for comment_image in comment.postcommentimage_set.all %}
+            <div class="mt-2 w-32 h-32 object-cover rounded-lg">
+              <img src="{{ comment_image.image.url }}" alt="Comment Image" class="w-full h-auto" />
+            </div>
+            {% endfor %}
+          </div>
+          <div class="flex items-center gap-4 [&>a:hover]:underline">
+            <!-- Likes comment -->
+            {% include 'social_app/likes_comment.html' %}
+
+            <div class="">
+              <button class="reply-button text-[#594100] flex gap-1 items-center" data-id="{{comment.id}}">
+                <i class="fas fa-reply text-[#594100]"></i>
+                <span id="repliescount-{{ comment.id }}">{{ comment.replies.count }}</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <form action="" method="POST">
+      {% csrf_token %}
+      <p class="my-6 mt-8 text-center">คุณต้องการลบความคิดเห็นนี้หรือไม่?</p>
+      <div class="flex justify-center">
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 mr-12 rounded">ยืนยัน</button>
+        <a href="{{ referer_url }}" class="px-4 py-2 ml-12 hover:underline">ย้อนกลับ</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Get the menu icon and the user menu
+    const menuIcon = document.getElementById('menu-icon');
+    const userMenu = document.getElementById('navbar-user');
+
+    const profileImageButton = document.getElementById('user-menu-button');
+    const userDropdownMenu = document.getElementById('user-dropdown');
+
+
+
+    menuIcon.addEventListener('click', function () {
+      userMenu.classList.toggle('hidden');
+    });
+
+    profileImageButton.addEventListener('click', function () {
+      userDropdownMenu.classList.toggle('hidden');
+    });
+
+
+
+
+  </script>
+
+</body>
+
+
+</html>

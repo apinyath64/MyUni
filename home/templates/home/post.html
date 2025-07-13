@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Create Post Page</title>
+</head>
+<body class="bg-[#FFEC9E] min-h-screen flex items-center justify-center">
+    <div class="bg-white border border-[#594100] text-[#594100] max-w-lg p-8 rounded shadow-xl w-full">
+        <div class="">
+            <h1 class="text-xl text-center font-bold mb-4">สร้างโพสต์</h1>
+            <div class="bg-white bg-opacity-50 rounded p-2">
+                <form method="post" action="" enctype="multipart/form-data" class="space-y-4">
+                    {% csrf_token %}
+                    <div>
+                        <label for="title" class="block text-sm font-medium">หัวข้อ:</label>
+                        <input type="text" id="title" name="title" required class="mt-1 border border-[#594100] p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md">
+                    </div>
+                    <div>
+                        <label for="content" class="block text-sm font-medium">เนื้อหา:</label>
+                        <textarea id="content" name="content" required rows="3" class="mt-1 border border-[#594100] p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md"></textarea>
+                    </div>
+                    <div>
+                        <label for="image" class="block text-sm font-medium ">เพิ่มรูปภาพ:</label>
+                        <input type="file" id="image" name="image" class="mt-1 border border-[#594100] p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md">
+                    </div>
+                    <div class="mt-4 flex justify-between">
+                        <button type="submit" class="py-2 px-4 rounded text-sm font-medium text-white bg-[#594100] focus:outline-none focus:ring-2 focus:ring-offset-2">สร้างโพสต์</button>
+                        <a href="{% url 'feed' %}?id={{ place_id }}" class="text-[#594100] p-2">ย้อนกลับ</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

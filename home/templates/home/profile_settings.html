@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Profile Settings</title>
+</head>
+
+<body>
+    <div class="min-h-screen bg-[#FFEC9E] flex items-center justify-center">
+        <div class="w-[500px] mx-auto bg-white border border-[#594100] rounded overflow-hidden shadow-md">
+            <div class="p-4 text-[#594100]">
+                <h1 class="text-xl font-bold text-center">ตั้งค่าโปรไฟล์โปรไฟล์ของคุณ</h1>
+                <form action="" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    {% csrf_token %}
+
+                    <div>
+                        <label for="bio" class="block text-sm font-medium mb-1">Bio:</label>
+                        <textarea name="bio" id="bio" rows="4"
+                            class="w-full border border-[#594100] bg-[#F6F0F0] rounded-md py-2 px-3 focus:outline-none focus:ring focus:border-gray-300"
+                            placeholder="เพิ่มคำอธิบายเกี่ยวกับคุณ...">{{ form.bio.value }}</textarea>
+                    </div>
+                    <div>
+                        <label for="profileimg" class="block text-sm font-medium mb-1">Profile
+                            Image:</label>
+                        <input type="file" name="profileimg" id="profileimg"
+                            class="py-2 px-3 border border-[#594100] bg-[#F6F0F0] rounded-md focus:outline-none focus:ring focus:border-gray-300">
+                    </div>
+                    <div>
+                        <label for="location" class="block text-sm font-medium mb-1">Location:</label>
+                        <input type="text" id="location" name="location"
+                            class="w-full border border-[#594100] rounded-md  bg-[#F6F0F0] py-2 px-3 focus:outline-none focus:ring focus:border-gray-300"
+                            placeholder="เพิ่มที่อยู่ของคุณ..." value="{{ form.location.value }}">
+                    </div>
+                    <div class="flex justify-between mt-4">
+                        <button type="submit"
+                            class="bg-[#594100] text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save
+                            Changes
+                        </button>
+                        <a href="{{ referer_url }}" class="px-4 py-2 hover:underline">ย้อนกลับ</a>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Login Page</title>
+    <style>
+        .login-box {
+            width: 40%;
+        }
+    </style>
+</head>
+<body class="bg-[#FFEC9E]">
+    <header>
+        {% include 'home/base.html' %}
+    </header>
+
+    <div class="h-screen flex items-center justify-center text-[#594100]">
+        <div class="bg-white border border-[#594100] px-12 py-4 rounded" style="width: 40vw;">
+            <div class="">
+                    <h1 class="text-xl mt-4 text-center font-bold leading-tight tracking-tight md:text-2xl">
+                        เข้าสู่ระบบ
+                    </h1>
+                    <form method="post" action="{% url 'login_user' %}" enctype="multipart/form-data" class="space-y-4 md:space-y-6">
+                        {% csrf_token %}
+                          <div class="mb-2">
+                              <label for="username" class="block text-sm font-medium">ชื่อผู้ใช้</label>
+                              <input type="text" id="username" name="username" required class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4" placeholder="ชื่อผู้ใช้" autocomplete="username">
+                          </div>
+                          <div class="mb-2">
+                              <label for="password" class="block text-sm font-medium">รหัสผ่าน</label>
+                              <input type="password" id="password" name="password" required rows="3" class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4" placeholder="รหัสผ่าน" autocomplete="current-password">
+                          </div>
+                          <button type="submit" class="w-full text-white bg-[#594100] mt-4 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded text-sm px-4 py-2 text-center">เข้าสู่ระบบ</button>
+                          <p class="text-sm font-light text-gray-500 pb-4">
+                              คุณยังไม่มีบัญชีผู้ใช้? <a href="{% url 'signup' %}" class="font-medium text-blue-600 hover:underline">ลงทะเบียน</a>
+                          </p>
+                      </form>
+              
+                </div>
+        </div>
+    </div>
+    
+
+    <script>
+        const menuIcon = document.getElementById('menu-icon');
+        const userMenu = document.getElementById('navbar-user');
+        
+        menuIcon.addEventListener('click', function() {
+        userMenu.classList.toggle('hidden');
+        });
+    </script>  
+</body>
+</html>

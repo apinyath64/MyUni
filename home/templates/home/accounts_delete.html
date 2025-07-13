@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Delete Account</title>
+</head>
+<body>
+    <div class="contenair bg-yellow-50 min-h-screen w-full flex justify-center items-center">
+        <div class="w-full max-w-screen-lg p-6">
+            <h1 class="text-center text-2xl font-bold mb-4">Delete User Account</h1>
+                
+                <div class="max-w-4xl py-6 xl:px-12 flex justify-center mx-auto rounded-md">
+                    <div class="w-full p-6 bg-white bg-opacity-60 backdrop-filter backdrop-blur-lg">
+                        <div class="header-card flex justify-between font-semibold">
+                            <div class="">Manage user accounts</div>
+                            <div class="ml-auto">
+                              <a href="{% url 'manage_accounts' %}" class="text-sm text-black-400" style="text-decoration: none;">
+                                  Back to manage account
+                              </a>
+                          </div>
+                        </div>
+                        <div class="card-content divide-y flex flex-col gap-y-3 mt-5">
+                          <div class="card-content-profil pt-3 flex justify-between items-center">
+                            <div class=" flex gap-x-2 items-center">
+                              <a href="{% url 'profile' user.username %}">
+                                <img class="avatar h-10 w-10 rounded-full border-4 border-opacity-40" src="{{ user.profile.profileimg.url }}" alt="">
+                              </a>
+                              <div class="card-name-user text-xs">
+                                <h3 class="font-semibold">{{ user.username }}</h3>
+                                <div class=" flex items-center gap-x-1">
+                                    <span class="h-3 w-3 rounded-full bg-red-500"></span>
+                                    <span>Offline</span>
+                                </div>
+                              </div>
+                            </div>
+                        
+                            <div class="card-action">
+                               <a href="{% url 'delete_user_account' user.id %}" style="text-decoration: none;">
+                                  <button class="flex items-center px-2 py-1 text-xs text-white bg-red-500 hover:bg-red-600">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v1H8V5a2 2 0 012-2z"></path>
+                                    </svg>
+                                    <span class="">Remove</span>
+                                  </button>
+                               </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+    
+                <p class="my-3 text-center">คุณต้องการลบบัญชีผู้ใช้นี้หรือไม่?</p>
+                <form action="" method="POST" class="flex justify-center">
+                  {% csrf_token %}
+                  <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mr-2">ยืนยัน</button>
+                  <a href="{{ referer_url }}" class="text-gray-600 px-4 py-2 hover:text-gray-900">ย้อนกลับ</a>
+                </form> 
+        </div>
+        
+    </div>
+</body>
+</html>

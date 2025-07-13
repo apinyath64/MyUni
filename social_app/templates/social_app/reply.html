@@ -1,0 +1,40 @@
+<div id="reply-{{ reply.id }}" class="w-full block pt-2 mt-2 text-[#594100] border-t-2 border-[#F5F5F5]">
+    <div class="flex items-end justify-between">
+        <div class="flex items-start">
+            {% if reply.user %}
+            <a href="{% url 'profile' reply.user.username %}" class="flex items-center">
+                <img class="w-8 h-8 object-cover rounded-full mr-2" src="{{ reply.user.profile.profileimg.url }}">
+            </a>
+            {% else %}
+            <img class="w-8 h-8 object-cover rounded-full" src="https://www.kindpng.com/picc/m/451-4517876_default-profile-hd-png-download.png">
+            {% endif %}
+            <div class="w-96">
+                {% if reply.user %}
+                <a class="block" href="">
+                    <span class="text-sm font-bold text-gray-700">{{ reply.user.profile.username }}</span>
+                    <span class="text-sm font-semibold text-gray-800">@{{ reply.user.username }}</span>
+                </a>
+                {% else %}
+                <span class="text-gray-500">no author</span>
+                {% endif %}
+                <div class="reply-content mt-2 py-4 text-base md:text-normal" style="max-width: 100%; word-wrap: break-word;">{{ reply.content }}</div>
+                
+                
+                <div class="flex gap-4 items-center">
+                    {% include 'social_app/likes_reply.html' %}
+                    {% if user.is_authenticated and reply.user == user %}
+                        <a class="cursor-pointer"
+                            hx-get="{% url 'reply-delete' reply.id %}"
+                            hx-target="#reply-{{ reply.id }}"
+                            hx-swap="outerHTML">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-4 h-4"><path fill="#594100" d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
+                        </a>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    
+</div> 

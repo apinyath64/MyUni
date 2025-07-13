@@ -1,0 +1,94 @@
+<div class="max-w-4xl text-[#594100] py-4 xl:px-12 rounded flex justify-center mx-auto bg-[#FFEC9E]">
+    <div class="w-full">
+        <div class="max-w-5xl mx-auto p-4">
+            <div class="flex items-center mb-4">
+                <div class="flex-shrink-0">
+                    <a href="{% url 'profile' comment.user.username %}">
+                        <img src="{{ comment.user.profile.profileimg.url }}" alt=""
+                            class="object-cover w-10 h-10 rounded-full" />
+                    </a>
+                </div>
+                <div class="ml-4">
+                    <a href="{% url 'profile' comment.user.username %}">
+                        <h3 class="text-lg font-semibold text-gray-700">
+                            {{ comment.user.username }}
+                        </h3>
+                    </a>
+                    <p class="text-xs text-gray-400">{{ comment.created_at }}</p>
+                </div>
+            </div>
+            <div>
+                <p class="text-base break-words">{{ comment.content }}</p>
+               
+                {% for comment_image in comment.postcommentimage_set.all %}
+                <div class="mt-2 w-32 h-32 object-cover rounded-lg">
+                    <img src="{{ comment_image.image.url }}" alt="Comment Image" class="w-full h-auto" />
+                </div>
+                {% endfor %}
+            </div>
+            <div class="flex items-center gap-4 [&>a:hover]:underline">
+                <!-- Likes comment -->
+                {% include 'social_app/likes_comment.html' %}
+
+                <!-- {% if comment.replies.count %}
+                <div class="flex gap-1 items-center">
+                    <i class="fas fa-reply"></i>
+                    <span id="repliescount-{{ comment.id }}">{{ comment.replies.count }}</span>
+                </div>
+                {% endif %} -->
+                <div class="">
+                    <button class="reply-button flex gap-1 items-center" data-id="{{comment.id}}">
+                        <i class="fas fa-reply"></i>
+                        <span id="repliescount-{{ comment.id }}">{{ comment.replies.count }}</span>
+                    </button>
+                </div>
+
+                {% if user.is_authenticated and comment.user == user %}
+                <div>
+                    <a href="{% url 'comment-delete' comment.id %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-4 h-4">
+                            <path fill="#594100"
+                                d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                        </svg>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Form for replying to the comment -->
+            <div class="hidden flex items-center mt-4" id="reply-comment-{{comment.id}}">
+                <form class="replyform flex" autocomplete="off" enctype="multipart/form-data"
+                    hx-post="{% url 'reply-sent' comment.id %}" hx-target="this" hx-swap="outerHTML">
+                    {% csrf_token %}
+                    <div class="flex gap-4">
+                        {{ replyform.content }}
+                        <button class="p-2 px-6 rounded text-xs bg-[#594100] text-white" type="submit">
+                            ส่ง
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Display replies -->
+            <div class="mt-4">
+                {% for reply in comment.replies.all %}
+                <div class="flex items-center">
+                    {% include 'social_app/reply.html' %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    document.querySelectorAll('.reply-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const comment_id = button.dataset.id;
+            const form = document.getElementById("reply-comment-" + comment_id);
+            if (form) form.classList.toggle("hidden");
+        });
+    });
+
+</script>

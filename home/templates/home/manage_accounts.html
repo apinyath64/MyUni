@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Manage user accounts</title>
+</head>
+<body class="bg-[#FFEC9E]">
+
+  <div class="md:h-screen flex items-center justify-center text-[#594100]">
+  
+    <div class="bg-white border border-[#594100] px-12 p-8 rounded" style="width: 50vw;">
+        <div class="header-card flex justify-between font-semibold">
+          <div class="text-lg">จัดการบัญชีผู้ใช้</div>
+          <div class="ml-auto">
+            <a href="{% url 'home' %}" class="text-sm hover:underline" style="text-decoration: none;">
+                ย้อนกลับ
+            </a>
+          </div>
+        </div>
+        <!-- end header -->
+    
+        <div class="card-content divide-y flex flex-col gap-y-3 mt-5">
+        {% for user in users %}
+          <div class="card-content-profil pt-3 flex justify-between items-center">
+            <div class=" flex gap-x-2 items-center">
+              <a href="{% url 'profile' user.username %}">
+                <img class="avatar h-10 w-10 rounded-full border-4 border-opacity-40" src="{{ user.profile.profileimg.url }}" alt="">
+              </a>
+              <div class="card-name-user text-xs">
+                <h3 class="font-semibold">{{ user.username }}</h3>
+                <p>{{user.email}}</p>
+                <!-- <div class=" flex items-center gap-x-1">
+                    <span class="h-3 w-3 rounded-full bg-red-500"></span>
+                    <span>Offline</span>
+                </div> -->
+              </div>
+            </div>
+        
+            <div class="card-action flex gap-4">
+              {% if not user.is_admin %}
+               <a href="{% url 'delete_user_account' user.id %}" style="text-decoration: none;">
+                  <button class="flex items-center px-4 p-2 text-xs text-white rounded bg-red-500 hover:bg-red-600">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v1H8V5a2 2 0 012-2z"></path>
+                    </svg>
+                    <span class="">นำออก</span>
+                  </button>
+               </a>
+               {% endif %}
+
+               
+               {% if not user.is_admin %}
+                <div>
+                  <a href="{% url 'grant_admin_rights' user.id %}" style="text-decoration: none;">
+                    <button class="flex items-center px-4 p-2 text-xs text-white rounded bg-blue-500 hover:bg-blue-600">ให้สิทธ์การจัดการ</button>
+                  </a>
+                </div>
+               {% else %}
+                <p class="text-md text-gray-400 pl-2">Admin</p>
+               {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+          
+          
+        </div>
+      </div>
+    
+  </div>
+
+</body>
+</html>
