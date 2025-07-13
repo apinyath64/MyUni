@@ -1,12 +1,18 @@
-# คำสั่้งที่ใช้ในการเริ่ม
+# MyUni: Senior project
 
- conda deactivate
+### อภิญญา ทองแสง 64114540542
 
- C:\Users\apiny\venv\scripts\activate
 
-# หลังจากที่แก้ไขไฟล์เพื่อคอมมิทไปที่github
- git add .
- git commit -m "ข้อความที่ต้องการระบุ"
- git push origin main
+## วิธีการใช้งาน
+1. Clone github repository
+    git clone https://github.com/apinyath64/MyUni.git
+    cd MyUni
 
- 
+2. Install dependencies
+    pip install -r requirements.txt
+
+3. Create database tables from migration files
+    python manage.py migrate
+
+4. Run server
+    python manage.py runserver
