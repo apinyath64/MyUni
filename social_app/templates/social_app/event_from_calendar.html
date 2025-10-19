@@ -3,37 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Event</title>
+    <title>MyUni | Add event</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body class="bg-[#FFEC9E] min-h-screen flex items-center justify-center">
-    <div class="bg-white border border-[#594100] text-[#594100] max-w-md p-8 rounded shadow-xl">
+    <div class="bg-white border border-[#594100] text-[#594100] max-w-md m-2 p-8 rounded shadow-xl">
         <div class="">
             <h1 class="text-2xl text-center font-bold mb-4">สร้างกิจกรรม</h1>
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="mb-2">
                     <label for="title" class="block text-sm font-medium">หัวข้อ:</label>
-                    <input type="text" id="title" name="title" required class="mt-1 p-2 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] rounded">
+                    <input type="text" id="title" name="title" required class="mt-1 p-2 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm  border border-[#594100] bg-[#F6F0F0] rounded">
                 </div>
                 <div class="mb-2">
                     <label for="detail" class="block text-sm font-medium">รายละเอียด:</label>
-                    <textarea id="detail" name="detail" required rows="3" class="mt-1 p-2 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] rounded"></textarea>
+                    <textarea id="detail" name="detail" required rows="3" class="mt-1 p-2 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm  border border-[#594100] bg-[#F6F0F0] rounded"></textarea>
                 </div>
                 <div class="grid grid-cols-2 gap-x-4 mb-2">
                     <div>
                         <label for="start_date" class="block text-sm font-medium">เริ่ม:</label>
-                        <input type="datetime-local" id="start_date" name="start_date" required class="mt-1 p-2 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] rounded">
+                        <input type="datetime-local" id="start_date" name="start_date" required class="mt-1 p-2 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm  border border-[#594100] bg-[#F6F0F0] rounded">
                     </div>
                     <div class="">
                         <label for="end_date" class="block text-sm font-medium">สิ้นสุด:</label>
-                        <input type="datetime-local" id="end_date" name="end_date" required class="mt-1 p-2 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] rounded">
+                        <input type="datetime-local" id="end_date" name="end_date" required class="mt-1 p-2 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm  border border-[#594100] bg-[#F6F0F0] rounded">
                     </div>
                 </div>
                 <div class="mb-2">
                     <label for="place" class="block text-sm font-medium">สถานที่:</label>
-                    <select id="place" name="place" required class="mt-1 p-2 block w-full py-2 px-3 border border-[#594100] bg-white rounded-md shadow-sm focus:outline-none focus:ring-gray-300 focus:border-gray-300 sm:text-sm">
+                    <select id="place" name="place" required class="mt-1 p-2 block w-full py-2 px-3  border border-[#594100] bg-[#F6F0F0] rounded-md shadow-sm focus:outline-none focus:ring-gray-300 focus:border-gray-300 sm:text-sm">
                         {% for place in form.place.field.queryset %}
                             <option value="{{ place.id }}">{{ place.name }}</option>
                         {% endfor %}
@@ -41,7 +41,7 @@
                 </div>
                 <div>
                     <label for="event_image" class="block text-sm font-medium">เพิ่มรูปภาพ:</label>
-                    <input type="file" id="event_image" name="event_image" class="mt-1 p-2 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] rounded">
+                    <input type="file" id="event_image" name="event_image" class="mt-1 p-2 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] bg-[#F6F0F0]  rounded">
                 </div>
                 <div class="mt-6 flex justify-between">
                     <button type="submit" class="p-2 px-4 bg-[#594100] text-white rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2">สร้างกิจกรรม</button>

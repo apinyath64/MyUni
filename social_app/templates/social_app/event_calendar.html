@@ -1,151 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event calendar page</title>
-    <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-    <style>
-        #user-dropdown {
-          position: absolute;
-          top: 3rem;
-          right: 2rem;
-      }
-      .fc-day-grid-event {
-        background: #5DADE2;
-        border: 2px solid #5DADE2;
-      }
-      
-      /* .fc-time-grid-event {
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event calendar page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/3.1.2/flowbite.js"
+    integrity="sha512-c9m0HP/+jR+ZgMbKqLHtvn8nT0IiJiw0NhgSWedfZWi1QvGS39Kz2w4Sbo7rD1eYA+fm7ypCLNR0gbAJv2mHQA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" 
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer" 
+  />
+  <style>
+    .fc-day-grid-event {
+      background: #5DADE2;
+      border: 2px solid #5DADE2;
+    }
+
+    /* .fc-time-grid-event {
         background: #5DADE2;
         border: 2px solid #5DADE2
       } */
-      
-      .fc-content {
-        color: #ffffff;
-      }
-      .logo-font {
-        font-family: 'Pacifico', cursive;
-      }
-      
-    </style>
+
+    .fc-content {
+      color: #ffffff;
+    }
+
+    .logo-font {
+      font-family: 'Pacifico', cursive;
+    }
+    nav {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 9999;
+    }
+  </style>
 </head>
+
 <body class="bg-[#FFEC9E]">
 
-  <nav class="text-[#594100] mt-4">
-    <div class="px-3 py-3 lg:px-5 lg:pl-3">
-      <div class="flex items-center justify-between px-6">
-        <div class="flex items-center justify-start pl-4 rtl:justify-end">
-          <a href="{% url 'home' %}" class="logo-font flex ms-2 md:me-24 text-[#594100]" style="text-decoration: none;">
-            <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">MyUni</span>
-          </a>
-        </div>
-        <div class="flex items-center">
-          <div class="w-full flex md:w-auto">
-            <ul class="flex flex-row justify-between gap-2 font-medium p-4 md:p-0 mt-4 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
-              <li>
-                <button class="border border-[#594100] rounded shadow-xl">
-                  <a href="{% url 'home' %}" class="block md:bg-transparent p-2 px-4" aria-current="page" style="text-decoration: none;">แผนที่</a>
-                </button>
-              </li>
-              <li>
-                <button class="border border-[#594100] rounded shadow-xl">
-                  <a href="{% url 'event_from_calendar' %}" class="block md:bg-transparent p-2 px-4" aria-current="page" style="text-decoration: none;">เพิ่มกิจกรรม</a>
-                </button>
-              </li>
-            
-              <li>
-                <button type="button" class="relative flex text-sm rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" id="user-menu-button" data-dropdown-toggle="user-dropdown">
-                  <span class="sr-only">Open user menu</span>
-                  <img class="w-10 h-10 rounded-full border border-gray-300" src="{{ profile.profileimg.url }}" alt="{{ profile.user.username }}">
-                  {% if unread_notifications_count > 0 %}
-                    <span class="absolute top-0 right-0 transform translate-x-2 -translate-y-2 bg-red-500 text-white rounded-full px-1.5 py-0.5 text-xs">{{ unread_notifications_count }}</span>
-                  {% endif %} 
-                </button>
-              </li>
-              
-            </ul>
-            
-          </div>
+  <nav class="px-6" style="font-family: 'Pacifico', cursive; ">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto mt-4 ">
 
-          {% if user.is_authenticated %}
-          <div class="z-50 hidden my-4 text-base text-[#594100] list-none bg-white border border-[#594100]  divide-y divide-gray-100 rounded shadow" id="user-dropdown">
-              <div class="px-4 py-3" role="none">
-                <a href="{% url 'profile' user.username %}" style="text-decoration: none;"><p class="text-sm" role="none">{{ profile.user.username }}</p></a>
-                <p class="text-sm font-medium truncate" role="none">{{ profile.user.email }}</p>
-              </div>
-              <ul class="py-1" role="none">
-                <li>
-                  <a href="{% url 'notifications' %}" class="block px-4 py-2 text-sm hover:bg-[#ffec9e]" style="text-decoration: none;">
-                    การแจ้งเตือน
-                    {% if unread_notifications_count %}
-                    <span class="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-white bg-red-600 rounded-full">
-                      {% if unread_notifications_count > 0  %}
-                        {{ unread_notifications_count }}
-                      {% endif %}
-                    </span>
-                    {% endif %}
-                  </a>
-                </li>
-                <li>
-                  <a href="{% url 'profile_settings' %}" class="block px-4 py-2 text-sm hover:bg-[#ffec9e]" style="text-decoration: none;" role="menuitem">ตั้งค่าโปรไฟล์</a>
-                </li>
-                <li>
-                  <a href="{% url 'logout_user' %}" class="block px-4 py-2 text-sm hover:text-white hover:bg-red-600" style="text-decoration: none;" role="menuitem">ออกจากระบบ</a>
-                </li>
-              </ul>
-          </div>
+      <a href="{% url 'home' %}" class="text-[#594100] flex items-center space-x-3 rtl:space-x-reverse">
+        <span class="logo self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MyUni</span>
+      </a>
+
+      <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+        <button type="button"
+          class="relative flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+          id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
+          data-dropdown-placement="bottom">
+          <span class="sr-only">Open user menu</span>
+          <img class="w-12 h-12 rounded-full" src="{{ profile.profileimg.url }}" alt="{{ profile.user.username }}" />
+          {% if unread_notifications_count %}
+          {% if unread_notifications_count > 0 %}
+            <span id="notify-count" class="absolute -top-1 -right-1 inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium bg-red-600 text-white rounded-full">{{ unread_notifications_count }}</span>
           {% endif %}
+          {% endif %}
+        </button>
+
+        <!-- Dropdown menu -->
+        <div
+          class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow-sm border border-[#594100] "
+          id="user-dropdown">
+          <div class="px-4 py-3 text-[#594100]">
+            <a href="{% url 'profile' user.username %}">
+              <span class="block text-md font-semibold">{{ profile.user.username }}</span>
+            </a>
+            <span class="block text-sm truncate">{{ profile.user.email }}</span>
+          </div>
+          <ul class="py-2 text-[#594100]" aria-labelledby="user-menu-button">
+            <li>
+              <a href="{% url 'notifications' %}" class="block px-4 py-2 text-sm hover:bg-[#ffec9e]"
+                style="text-decoration: none;" role="menuitem">
+                การแจ้งเตือน
+                {% if unread_notifications_count %}
+                <span
+                  class="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium bg-red-600 text-white rounded-full">
+                  {% if unread_notifications_count > 0 %}
+                  {{ unread_notifications_count }}
+                  {% endif %}
+                </span>
+                {% endif %}
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'profile_settings' %}" class="block px-4 py-2 text-sm hover:bg-[#ffec9e]"
+                style="text-decoration: none;" role="menuitem">ตั้งค่าโปรไฟล์</a>
+            </li>
+            <li>
+              <a href="{% url 'logout_user' %}" class="block px-4 py-2 text-sm hover:text-white hover:bg-red-600"
+                style="text-decoration: none;" role="menuitem">ออกจากระบบ</a>
+            </li>
+
+          </ul>
         </div>
-          
+
       </div>
+
+      <button data-collapse-toggle="navbar-user" type="button"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        aria-controls="navbar-user" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M1 1h15M1 7h15M1 13h15" />
+        </svg>
+      </button>
+
+      <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+        <ul
+          class="flex flex-col font-medium p-4 md:p-0 mt-4  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
+          style="font-family: 'Pacifico' ">
+
+          <li>
+            <a href="{% url 'home' %}"
+              class="block py-2 px-3 bg-white hover:bg-opacity-70 text-[#594100] border border-[#594100] rounded-md md:p-2">
+              หน้าหลัก
+              <i class="fa-solid fa-house"></i>
+            </a>
+          </li>
+
+          <li>
+            <a href="{% url 'event_from_calendar' %}"
+              class="block py-2 px-3 bg-white hover:bg-opacity-70 text-[#594100] border border-[#594100] rounded-md md:p-2">
+              เพิ่มกิจกรรม
+              <i class="fa-solid fa-calendar-plus"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      
+
     </div>
   </nav>
 
-    <div class="container mx-auto p-4">
-        <div class="flex flex-col">
-            
-            <div class="w-full px-12 py-10">
-              <p class="logo-font text-xl text-center font-semibold mb-6 text-[#594100]">ปฏิทินกิจกรรมทั้งหมด</p>
-                <div id="calendar" class="w-full p-12 bg-white shadow-lg rounded"></div>
-            </div>
+  <!-- calendar -->
+  <div class="container mx-auto p-4 mt-14">
+    <div class="flex flex-col">
+
+      <div class="w-full px-4 sm:px-6 lg:px-12 py-6 lg:py-10">
+        <div class="flex flex-col items-center justify-center py-8" style="font-family: 'Pacifico', cursive;">
+          <h1 class="text-xl font-semibold mb-2 text-[#594100]">ปฏิทินกิจกรรมภายในมหาวิทยาลัย</h1>
+          <p class="text-[#594100]">กิจกรรมทั้งหมดที่ถูกสร้างจะแสดงที่นี่ <i class="fa-solid fa-hand-point-down"></i></p>
         </div>
+        <div class="w-full p-4 sm:p-6 lg:p-12 bg-white shadow-lg rounded overflow-x-auto">
+          <div id="calendar" class="min-w-[300px]"></div>
+        </div>
+      </div>
     </div>
+  </div>
+
+
+
+  <script>
+    $(document).ready(function () {
+      var calendar = $('#calendar').fullCalendar({
+        header: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'month,agendaWeek,agendaDay'
+        },
+        events: '/all_events',
+        selectable: true,
+        selectHelper: true,
+        editable: true,
+        eventLimit: true,
+        eventClick: function (event) {
+          window.location.href = '/event_details/' + event.id;
+        }
+      });
+    });
 
    
-
-    <script>
-        $(document).ready(function () {
-            var calendar = $('#calendar').fullCalendar({
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
-                events: '/all_events',
-                selectable: true,
-                selectHelper: true,
-                editable: true,
-                eventLimit: true,
-                eventClick: function(event) {
-                  window.location.href = '/event_details/' + event.id;
-                }
-            });
-        });
-
-        //navbar icon
-        const profileImageButton = document.getElementById('user-menu-button');
-        const userDropdownMenu = document.getElementById('user-dropdown');
-
-        profileImageButton.addEventListener('click', function() {
-          userDropdownMenu.classList.toggle('hidden');
-        });
-    </script>
+  </script>
 </body>
+
 </html>

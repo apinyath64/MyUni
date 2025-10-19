@@ -1,137 +1,161 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Uni</title>
-<!-- <link rel="stylesheet" href="{% static 'css/base_style.css' %}"> -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-<style>
-  html, body, #map {
-    height: 100%;
-    margin: 0;
-  }
-  #map {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Uni</title>
+  <!-- <link rel="stylesheet" href="{% static 'css/base_style.css' %}"> -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/3.1.2/flowbite.js"
+    integrity="sha512-c9m0HP/+jR+ZgMbKqLHtvn8nT0IiJiw0NhgSWedfZWi1QvGS39Kz2w4Sbo7rD1eYA+fm7ypCLNR0gbAJv2mHQA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet" />
+  <style>
+    html,
+    body,
+    #map {
+      height: 100%;
+      margin: 0;
       width: 100%;
-  }
-  nav {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 9999;
-  }
-  #user-dropdown {
-    position: absolute;
-    top: 3rem;
-    right: 2rem;
-  }
-  .logo-font {
-    font-family: 'Pacifico', cursive;
-  }
-  .logo {
-    font-size: var(--text-xl);
-    font-family: 'Pacifico', cursive;
-  }
-  .messages-box {
-    position: fixed;
-    top: 4rem; /* Adjust this value if your navbar height is different */
-    width: 80%;
-    z-index: 9998;
-  }
-  
-</style>
+    }
+
+    nav {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 9999;
+    }
+
+    .logo {
+      font-size: var(--text-xl);
+      font-family: "Pacifico", cursive;
+    }
+
+    .messages-box {
+      position: fixed;
+      top: 4rem;
+      width: 80%;
+      z-index: 9998;
+    }
+  </style>
 </head>
 
 <body>
+  <nav class="px-6" style="font-family: 'Pacifico', cursive; ">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto mt-4 ">
 
-  <nav class="mt-4">
-    <div class="px-3 py-3 lg:px-5 lg:pl-3">
-      <div class="flex items-center justify-between px-6">
-        <div class="flex items-center justify-start pl-4 rtl:justify-end">
-          <a href="{% url 'home' %}" class="logo flex ms-2 md:me-24 text-[#594100]" style="text-decoration: none;">
-            <span class="self-center font-semibold sm:text-2xl whitespace-nowrap">MyUni</span>
-          </a>
-        </div>
-        <div class="flex items-center">
-          <div class="w-full flex md:w-auto">
-            <ul class="flex flex-row justify-between gap-2 font-medium p-4 md:p-0 mt-4 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
-              {% if user.is_authenticated %}
-              <li>
-                <button class="text-[#594100] border border-[#594100] rounded-md ">
-                  <a href="{% url 'event_calendar' %}" class="block md:bg-transparent p-2" aria-current="page" style="text-decoration: none;">ปฏิทินกิจกรรม</a>
-                </button>
-              </li>
-                {% if user.is_admin %}
-                <li>
-                  <button class="text-[#594100] border border-[#594100] rounded-md">
-                      <a href="{% url 'manage_accounts' %}" class="block md:bg-transparent p-2 px-4" aria-current="page" style="text-decoration: none;">จัดการบัญชีผู้ใช้</a>
-                  </button>
-                </li>
-                <li>
-                  <button class="text-[#594100] border border-[#594100] rounded-md">
-                      <a href="{% url 'manage_posts' %}" class="block md:bg-transparent p-2 px-4" aria-current="page" style="text-decoration: none;">จัดการโพสต์</a>
-                  </button>
-                </li>
-                {% endif %}
-              <li>
-                <button type="button" class="relative flex text-sm rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" id="user-menu-button" data-dropdown-toggle="user-dropdown">
-                  <span class="sr-only">Open user menu</span>
-                  <img class="w-10 h-10 rounded-full border border-gray-300" src="{{ profile.profileimg.url }}" alt="{{ profile.user.username }}">
-                  {% if unread_notifications_count > 0 %}
-                    <span class="absolute top-0 right-0 transform translate-x-2 -translate-y-2 bg-red-500 text-white rounded-full px-1.5 py-0.5 text-xs">{{ unread_notifications_count }}</span>
-                  {% endif %} 
-                </button>
-              </li>
-              {% else %}
-              <li>
-                <a href="{% url 'login_user' %}" class="block p-2 px-4 rounded border border-[#594100]" style="text-decoration: none;">เข้าสู่ระบบ</a>
-              </li>
-              <li>
-                <a href="{% url 'signup' %}" class="block p-2 px-4 rounded border border-[#594100]" style="text-decoration: none;">ลงทะเบียน</a>
-              </li>
-              {% endif %}
-            </ul>
-            
-          </div>
+      <a href="{% url 'home' %}" class="text-[#594100] flex items-center space-x-3 rtl:space-x-reverse">
+        <span class="logo self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MyUni</span>
+      </a>
 
-          {% if user.is_authenticated %}
-          <div class="z-50 hidden my-4 text-base list-none bg-white border border-[#594100] divide-y divide-gray-100 rounded shadow" id="user-dropdown">
-              <div class="px-4 py-3 text-[#594100]" role="none">
-                <a href="{% url 'profile' user.username %}" style="text-decoration: none;"><p class="text-sm" role="none">{{ profile.user.username }}</p></a>
-                <p class="text-sm font-medium truncate" role="none">{{ profile.user.email }}</p>
-              </div>
-              <ul class="py-1 text-[#594100]" role="none">
-                <li>
-                  <a href="{% url 'notifications' %}" class="block px-4 py-2 text-sm hover:bg-[#ffec9e]" style="text-decoration: none;">
-                    การแจ้งเตือน
-                    {% if unread_notifications_count %}
-                    <span class="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium bg-red-600 text-white rounded-full">
-                      {% if unread_notifications_count > 0  %}
-                        {{ unread_notifications_count }}
-                      {% endif %}
-                    </span>
-                    {% endif %}
-                  </a>
-                </li>
-                <li>
-                  <a href="{% url 'profile_settings' %}" class="block px-4 py-2 text-sm hover:bg-[#ffec9e]" style="text-decoration: none;" role="menuitem">ตั้งค่าโปรไฟล์</a>
-                </li>
-                <li>
-                  <a href="{% url 'logout_user' %}" class="block px-4 py-2 text-sm hover:text-white hover:bg-red-600" style="text-decoration: none;" role="menuitem">ออกจากระบบ</a>
-                </li>
-              </ul>
-          </div>
+      <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+        <button type="button"
+          class="relative flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+          id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
+          data-dropdown-placement="bottom">
+          <span class="sr-only">Open user menu</span>
+          <img class="w-12 h-12 rounded-full" src="{{ profile.profileimg.url }}" alt="{{ profile.user.username }}" />
+          {% if unread_notifications_count %}
+          {% if unread_notifications_count > 0 %}
+            <span id="notify-count" class="absolute -top-1 -right-1 inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium bg-red-600 text-white rounded-full">{{ unread_notifications_count }}</span>
           {% endif %}
+          {% endif %}
+        </button>
+
+        <!-- Dropdown menu -->
+        <div
+          class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow-sm border border-[#594100] "
+          id="user-dropdown">
+          <div class="px-4 py-3 text-[#594100]">
+            <a href="{% url 'profile' user.username %}">
+              <span class="block text-md font-semibold">{{ profile.user.username }}</span>
+            </a>
+            <span class="block text-sm truncate">{{ profile.user.email }}</span>
+          </div>
+          <ul class="py-2 text-[#594100]" aria-labelledby="user-menu-button">
+            <li>
+              <a href="{% url 'notifications' %}" class="block px-4 py-2 text-sm hover:bg-[#ffec9e]"
+                style="text-decoration: none;" role="menuitem">
+                การแจ้งเตือน
+                {% if unread_notifications_count %}
+                <span
+                  class="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium bg-red-600 text-white rounded-full">
+                  {% if unread_notifications_count > 0 %}
+                  {{ unread_notifications_count }}
+                  {% endif %}
+                </span>
+                {% endif %}
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'profile_settings' %}" class="block px-4 py-2 text-sm hover:bg-[#ffec9e]"
+                style="text-decoration: none;" role="menuitem">ตั้งค่าโปรไฟล์</a>
+            </li>
+            <li>
+              <a href="{% url 'logout_user' %}" class="block px-4 py-2 text-sm hover:text-white hover:bg-red-600"
+                style="text-decoration: none;" role="menuitem">ออกจากระบบ</a>
+            </li>
+
+          </ul>
         </div>
-          
+
       </div>
+
+      <button data-collapse-toggle="navbar-user" type="button"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        aria-controls="navbar-user" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M1 1h15M1 7h15M1 13h15" />
+        </svg>
+      </button>
+
+      <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+        <ul
+          class="flex flex-col font-medium p-4 md:p-0 mt-4  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
+          style="font-family: 'Pacifico' ">
+
+          <li>
+            <a href="{% url 'event_calendar' %}"
+              class="block py-2 px-3 bg-white hover:bg-[#ffec9e] text-[#594100] border border-[#594100] rounded-md md:p-2">
+              ปฏิทินกิจกรรม
+              <i class="fa-solid fa-calendar-days"></i>
+            </a>
+          </li>
+
+          {% if user.is_admin %}
+          <li>
+            <a href="{% url 'manage_accounts' %}"
+              class="block py-2 px-3 bg-white hover:bg-[#ffec9e] text-[#594100] border border-[#594100] rounded-md md:p-2">
+              จัดการบัญชีผู้ใช้
+              <i class="fa-solid fa-user"></i>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'manage_posts' %}"
+              class="block py-2 px-3 bg-white hover:bg-[#ffec9e] text-[#594100] border border-[#594100] rounded-md md:p-2">
+              จัดการโพสต์
+              <i class="fas fa-pencil-alt"></i>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      
+
     </div>
   </nav>
 
@@ -139,149 +163,142 @@
     <div class="messages-box">
       {% if messages %}
       <ul class="messages">
-          {% for message in messages %}
-          <li class="p-4 rounded 
-          {% if message.tags == 'success' %} bg-green-100 bg-opacity-60 border border-green-400 text-green-700 
-          {% elif message.tags == 'error' %} bg-red-100 bg-opacity-60 border border-red-400 text-red-700 
-          {% elif message.tags == 'warning' %} bg-yellow-100 bg-opacity-60 border border-yellow-400 text-yellow-700 
-          {% elif message.tags == 'info' %} bg-blue-100 bg-opacity-60 border border-blue-400 text-blue-700 
-          {% endif %}">
-            {{ message|safe }}
-            <span class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentNode.style.display = 'none';">
-              <svg class="fill-current h-6 w-6 text-gray-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
-            </span>
-          </li>
-          {% endfor %}
+        {% for message in messages %}
+        <li
+          class="p-4 rounded {% if message.tags == 'success' %} bg-green-100 bg-opacity-60 border border-green-400 text-green-700 {% elif message.tags == 'error' %} bg-red-100 bg-opacity-60 border border-red-400 text-red-700 {% elif message.tags == 'warning' %} bg-yellow-100 bg-opacity-60 border border-yellow-400 text-yellow-700 {% elif message.tags == 'info' %} bg-blue-100 bg-opacity-60 border border-blue-400 text-blue-700 {% endif %}">
+          {{ message|safe }}
+          <span class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentNode.style.display = 'none';">
+            <svg class="fill-current h-6 w-6 text-gray-500" role="button" xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20">
+              <title>Close</title>
+              <path
+                d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+            </svg>
+          </span>
+        </li>
+        {% endfor %}
       </ul>
       {% endif %}
     </div>
   </div>
 
-  
-  {% block content %}
-  {% endblock content  %}
+  {% block content %} {% endblock content %}
 
+  <!--script file-->
+  <script>
+    $(function () {
+      $(".toggle").on("click", function () {
+        if ($(".item").hasClass("active")) {
+          $(".item").removeClass("active");
+        } else {
+          $(".item").addClass("active");
+        }
+      });
+    });
 
+    var userLocationIcon = L.icon({
+      iconUrl: '{% static "images/marker-yellow.png" %}',
+      iconSize: [30, 30],
+      iconAnchor: [19, 30],
+      popupAnchor: [0, -30],
+    });
 
-<!--script file-->
-<script>
-  $(function() {
-    $(".toggle").on("click", function() {
-      if($(".item").hasClass("active")){
-        $(".item").removeClass("active");
-      }
-      else{
-        $(".item").addClass("active");
-      }
-    })
-  }); 
+    var map = L.map("map");
+    map.setView([15.117569258172438, 104.90279805091271], 15);
 
-var userLocationIcon = L.icon({
-  iconUrl: '{% static "images/marker-yellow.png" %}',
-  iconSize: [30, 30],
-  iconAnchor: [19, 30],
-  popupAnchor: [0, -30]
-})
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribute: "© OpenStreetMap",
+    }).addTo(map);
 
-var map = L.map('map');
-map.setView([15.117569258172438, 104.90279805091271], 15);
+    navigator.geolocation.watchPosition(success, error);
 
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribute: '© OpenStreetMap'
-}).addTo(map);
+    let marker, zoomed;
 
-navigator.geolocation.watchPosition(success, error);
+    function success(pos) {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
 
-let marker, zoomed;
-
-function success(pos) {
-
-    const lat = pos.coords.latitude;
-    const lng = pos.coords.longitude;
-
-    if (marker) {
+      if (marker) {
         map.removeLayer(marker);
+      }
+
+      marker = L.marker([lat, lng], { icon: userLocationIcon }).addTo(map);
     }
 
-    marker = L.marker([lat, lng], { icon: userLocationIcon }).addTo(map);
-    
-}
-
-function error(err) {
-
-    if (err.code === 1) {
+    function error(err) {
+      if (err.code === 1) {
         alert("Please allow geolocation access");
-    } else {
+      } else {
         alert("Cannot get current location");
+      }
     }
-}
 
-//var places = {{ places_data|safe }};
-var places = JSON.parse('{{ places_data|escapejs  }}');
+    //var places = {{ places_data|safe }};
+    var places = JSON.parse("{{ places_data|escapejs  }}");
 
-map.on('contextmenu', function(e) {
-  var latlng = e.latlng;
-  var lat = latlng.lat;
-  var lng = latlng.lng;
+    map.on("contextmenu", function (e) {
+      var latlng = e.latlng;
+      var lat = latlng.lat;
+      var lng = latlng.lng;
 
-  var popupContent = "Latitude: " + lat + "<br>Longitude: " + lng;
-  var addPlaceUrl = "{% url 'add_new_place' %}?lat=" + lat + "&lng=" + lng;
-  L.popup()
-      .setLatLng(latlng)
-      .setContent(popupContent + '<br><button class="mt-4"><a href="' + addPlaceUrl + '" class="hover:underline">เพิ่มสถานที่นี้</a></button>')
-      .openOn(map);
-});
+      var popupContent = "Latitude: " + lat + "<br>Longitude: " + lng;
+      var addPlaceUrl =
+        "{% url 'add_new_place' %}?lat=" + lat + "&lng=" + lng;
+      L.popup()
+        .setLatLng(latlng)
+        .setContent(
+          popupContent +
+          '<br><button class="mt-4"><a href="' +
+          addPlaceUrl +
+          '" class="hover:underline">เพิ่มสถานที่นี้</a></button>'
+        )
+        .openOn(map);
+    });
 
-var defaultIcon = L.icon({
-  iconUrl: '{% static "images/marker.png" %}',
-  iconSize: [30, 30], 
-  iconAnchor: [19, 30], 
-  popupAnchor: [0, -30]
-});
+    var defaultIcon = L.icon({
+      iconUrl: 'https://img.icons8.com/ios-filled/50/FAB005/visit.png',
+      iconSize: [30, 30],
+      iconAnchor: [19, 30],
+      popupAnchor: [0, -30],
+    });
 
-var eventIcon = L.icon({
-  iconUrl: '{% static "images/pin1.png" %}',
-  iconSize: [30, 30], 
-  iconAnchor: [19, 30], 
-  popupAnchor: [0, -30] 
-});
+    var eventIcon = L.icon({
+      iconUrl: '{% static "images/pin1.png" %}',
+      iconSize: [30, 30],
+      iconAnchor: [19, 30],
+      popupAnchor: [0, -30],
+    });
 
-places.forEach(place => {
-  var popupContent = '<strong>' + place.name + '</strong><br>';
-  if (place.detail) {
-    popupContent += place.detail + '<br>';
-  }
+    places.forEach((place) => {
+      var popupContent = "<strong>" + place.name + "</strong><br>";
+      if (place.detail) {
+        popupContent += place.detail + "<br>";
+      }
 
-  //check ongoing event
-  var EventsOngoing = false;
-  places.forEach(data => {
-    if (data.id === place.id && data.events_ongoing.length > 0) {
-      EventsOngoing = true;
-    }
-  })
+      //check ongoing event
+      var EventsOngoing = false;
+      places.forEach((data) => {
+        if (data.id === place.id && data.events_ongoing.length > 0) {
+          EventsOngoing = true;
+        }
+      });
 
-  var icon = EventsOngoing ? eventIcon : defaultIcon;
+      var icon = EventsOngoing ? eventIcon : defaultIcon;
 
-  popupContent += '<div class="mt-4"><a href="{% url "feed" %}?id=' + place.id + '" class="post-feed-link hover:underline">คลิกเยี่ยมชม</a></div>';
-  L.marker(place.location, { icon: icon })
+      popupContent +=
+        '<div class="mt-4"><a href="{% url "place" %}?id=' +
+        place.id +
+        '" class="hover:underline">เยี่ยมชม</a></div>';
+      L.marker(place.location, { icon: icon })
         .addTo(map)
         .bindPopup(popupContent);
+    });
 
-});
 
 
-//navbar icon
-  const profileImageButton = document.getElementById('user-menu-button');
-  const userDropdownMenu = document.getElementById('user-dropdown');
 
-  profileImageButton.addEventListener('click', function() {
-    userDropdownMenu.classList.toggle('hidden');
-  });
-
-</script>
-
+  </script>
 </body>
+
 </html>
-
-

@@ -1,1 +1,70 @@
-<h1>Hello</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>MyUni | Post edit</title>
+    
+</head>
+<body class="bg-[#FFEC9E]">
+
+    <div class="min-h-screen flex items-center justify-center text-[#594100]">
+        <div class="flex flex-col items-center justify-center px-4 py-8 mx-auto md:lg:py-24">
+
+            <div class="w-full bg-white border border-[#594100] rounded md:mt-0 sm:max-w-md xl:p-0">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight  md:text-2xl text-center">
+                        แก้ไขโพสต์นี้
+                    </h1>
+                    <form method="post" enctype="multipart/form-data" class="space-y-4">
+                        {% csrf_token %}
+                        <div class="mb-2">
+                            <label for="title" class="block text-sm font-medium">หัวข้อ:</label>
+                            <input type="text" id="title" name="title" value="{{ post.title }}" required class="mt-1 p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] bg-[#F6F0F0] rounded">
+                        </div>
+                        <div class="mb-2">
+                            <label for="content" class="block text-sm font-medium">เนื้อหา:</label>
+                            <textarea id="content" name="content" required rows="3" class="mt-1 p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] bg-[#F6F0F0] rounded">{{ post.content }}</textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="image" class="block text-sm font-medium">เพิ่มรูปภาพ:</label>
+                            <input type="file" id="image" name="image" class="mt-1 p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border border-[#594100] bg-[#F6F0F0] rounded">
+                            {% if existing_images %}
+                                <p class="mt-2 text-sm">Current Image:</p>
+                                {% for image in existing_images %}
+                                    <div class="relative">
+                                        <img src="{{ image.image.url }}" alt="Post Image" class="h-32">
+                                        <label class="absolute top-0 right-0 text-xs flex items-center">
+                                            <input type="checkbox" name="delete_post_images" value="{{ image.id }}">
+                                            ลบ
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="flex justify-between mt-4">
+                            <button type="submit" class="py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-[#594100] focus:outline-none focus:ring-2 focus:ring-offset-2">บันทึกการเปลี่ยนแปลง</button>
+                            <a href="{% url 'post_content' post.id %}" class="hover:underline py-2">ย้อนกลับ</a>
+                        </div>
+                    </form>
+                    
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script>
+        const profileImageButton = document.getElementById('user-menu-button');
+            const userDropdownMenu = document.getElementById('user-dropdown');
+    
+            profileImageButton.addEventListener('click', function() {
+                userDropdownMenu.classList.toggle('hidden');
+            });
+    </script>
+</body>
+</html>

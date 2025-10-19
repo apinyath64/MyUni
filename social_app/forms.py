@@ -45,7 +45,7 @@ class NestedReplyForm(forms.ModelForm):
         
      
 class EventForm(forms.ModelForm):
-    #image = forms.ImageField(required=False)
+    image = forms.ImageField(required=False)
     class Meta:
         model = Event
         fields = ('title', 'detail', 'start_date', 'end_date')

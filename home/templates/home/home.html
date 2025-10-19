@@ -1,8 +1,145 @@
 {% extends 'home/base.html' %}
 {% block content %}
-  <!--แสดงแผนที่-->
-  <div class="relative h-screen">
-    <div id="map" class=""></div>
+<div class="pt-24 min-h-screen bg-[#FAF9EE]" style="font-family: 'Pacific', cursive;">
+  <div class="bg-[#594100] py-12 text-[#FAF9EE]">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h1 class="text-4xl font-bold mb-4 ">ยินดีต้อนรับสู่ MyUni</h1>
+      <p class="text-xl opacity-90">ค้นหาสถานที่และกิจกรรมภายในมหาวิทยาลัย</p>
+    </div>
   </div>
-  
+
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <a href="{% url 'event_calendar' %}"
+        class="bg-white p-6 rounded-xl flex flex-col justify-center items-center shadow-md hover:shadow-lg transition-shadow border border-[#594100] ">
+        <!-- <i class="fa-solid fa-calendar-days text-3xl text-[#594100] mb-4"></i> -->
+        <img class="w-12 h-12" src="https://img.icons8.com/color/48/calendar--v1.png" alt="calendar--v1" />
+        <h3 class="text-xl font-semibold text-[#594100]">ปฏิทินกิจกรรม</h3>
+        <p class="text-gray-600 mt-2">ดูกิจกรรมทั้งหมดในมหาวิทยาลัย</p>
+      </a>
+
+      <div id="places"
+        class="bg-white p-6 rounded-xl shadow-md border border-[#594100] flex flex-col justify-center items-center">
+        <!-- <i class="fa-solid fa-map-location-dot text-3xl text-[#594100] mb-4"></i> -->
+        <img class="w-12 h-12" src="https://img.icons8.com/keek/100/map-marker.png" alt="map-marker" />
+        <h3 class="text-xl font-semibold text-[#594100]">สถานที่ทั้งหมด</h3>
+        <p class="text-gray-600 mt-2">เยี่ยมชมโพสต์ล่าสุด กิจกรรมที่กำลังดำเนินการ ในสถานที่ต่างๆ ภายในแผนที่</p>
+
+        <button data-modal-target="default-modal" data-modal-toggle="default-modal"
+          class="text-gray-600 hover:underline">
+          ดูวิธีการใช้งาน <i class="fa-solid fa-hand-point-left"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Main modal -->
+  <div id="default-modal" tabindex="-1" aria-hidden="true"
+    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-[10000] justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+
+      <div class="relative bg-white rounded-lg shadow-sm">
+        <div
+          class="flex items-center justify-between p-4 md:p-5 rounded-t">
+          <h3 class="text-xl font-semibold text-[#594100] flex">
+            <img width="24" height="24" src="https://img.icons8.com/color/48/map-pin.png" alt="map-pin"/> 
+            <span>วิธีการใช้งานแผนที่</span>
+          </h3>
+          <button type="button"
+            class="text-[#594100] bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            data-modal-hide="default-modal">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        
+        <div class="p-4 md:p-5 space-y-4">
+          <!-- how to link to place details -->
+          <div class="space-y-3">
+            <div class="flex items-start space-x-3">
+              <div class="w-8 h-8 bg-[#594100] text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                1
+              </div>
+              <div>
+                <h4 class="font-semibold text-[#594100] text-lg">คลิก Marker บนแผนที่</h4>
+                <p class="text-gray-600 mt-1">
+                  คลิกที่เครื่องหมายบนแผนที่เพื่อดูชื่อสถานที่และรายละเอียดเพิ่มเติม
+                </p>
+                <ul class="text-gray-600 text-sm mt-2 space-y-1 ml-4">
+                  <li>• คลิก <span class="underline">เยี่ยมชม</span> เพื่อเข้าไปยังหน้ารายละเอียดสถานที่</li>
+                  <li>• ในหน้ารายละเอียดจะแสดงโพสต์และกิจกรรมทั้งหมดที่เกี่ยวข้อง</li>
+                  <li>• สามารถเพิ่มโพสต์หรือกิจกรรมใหม่ในสถานที่นั้นได้</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Section 2: Right Click -->
+            <div class="flex items-start space-x-3 pt-4">
+              <div class="w-8 h-8 bg-[#594100] text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                2
+              </div>
+              <div>
+                <h4 class="font-semibold text-[#594100] text-lg">คลิกขวาที่ตำแหน่งใดๆ บนแผนที่</h4>
+                <p class="text-gray-600 mt-1">
+                  คลิกขวาที่พื้นที่ว่างบนแผนที่เพื่อเพิ่มสถานที่ใหม่
+                </p>
+                <ul class="text-gray-600 text-sm mt-2 space-y-1 ml-4">
+                  <li>• จะแสดงเมนูให้เพิ่มสถานที่ใหม่</li>
+                  <li>• สามารถตั้งชื่อและรายละเอียดสถานที่ได้</li>
+                  <li>• สถานที่ใหม่จะปรากฏบนแผนที่ทันที</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- tips -->
+            <div class="bg-[#FAF9EE] border border-[#594100] border-opacity-20 rounded-lg p-4 mt-4">
+              <h5 class="flex font-semibold text-[#594100] mb-2">
+                <img width="24" height="24" src="https://img.icons8.com/color/48/light.png" alt="light"/>
+                คำแนะนำเพิ่มเติม
+              </h5>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
+                <div class="flex items-center space-x-2">
+                  <i class="fa-solid fa-square-plus text-[#594100]"></i>
+                  <i class="fa-solid fa-square-minus text-[#594100]"></i>
+                  <span>ใช้เพื่อซูม เข้า-ออก</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <i class="fas fa-arrows-alt text-[#594100]"></i>
+                  <span>ลากแผนที่เพื่อเลื่อนดูพื้นที่อื่น</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <i class="fas fa-mouse-pointer text-[#594100]"></i>
+                  <span>คลิกซ้ายเพื่อดูข้อมูลสถานที่</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <i class="fas fa-hand-point-right text-[#594100]"></i>
+                  <span>คลิกขวาเพื่อเพิ่มสถานที่ใหม่</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Modal footer -->
+        <div class="flex items-center p-4 md:p-5 rounded-b">
+          <button data-modal-hide="default-modal" type="button"
+            class="text-white bg-[#594100] font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+            เข้าใจแล้ว
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative h-screen m-4 px-6 pb-12">
+    <div id="map" class="rounded-lg sm:mx-6 md:mx-6" style="z-index: 10;"></div>
+  </div>
+</div>
+
 {% endblock content %}

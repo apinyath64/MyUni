@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Manage Posts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet" />
+    <title>MyUni | Manage Posts</title>
 </head>
-<body class="bg-[#FFEC9E]">
+<body class="bg-[#FFEC9E] min-h-screen">
 
 
-<div class="md:h-screen flex items-center justify-center text-[#594100]">
-    <ul class="bg-white border border-[#594100] px-12 p-8 rounded" style="width: 50vw;">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <ul class="bg-white border border-[#594100] lg:px-12 sm:px-4 md:px-4 p-4 sm:p-2 md:p-2 rounded" >
         <div class="header-card py-2 px-4 flex justify-between font-semibold">
-            <div class="text-lg">จัดการโพสต์</div>
+            <div class="text-lg text-[#594100]">จัดการโพสต์</div>
             <div class="ml-auto">
-                <a href="{% url 'home' %}" class="text-sm hover:underline">
+                <a href="{% url 'home' %}" class="text-sm hover:underline text-[#594100]">
                     ย้อนกลับ
                 </a>
             </div>

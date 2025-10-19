@@ -92,7 +92,6 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    messages.success(request, "คุณได้ออกจากระบบแล้ว")
     return redirect('home')
 
 @user_passes_test(is_admin)
@@ -156,11 +155,11 @@ def delete_user_account(request, user_id):
     
     return render(request, 'home/accounts_delete.html', context)
 
-@login_required
-def password_change(request):
-    user = request.user
-    form = SetPasswordForm(user)
-    return render(request, 'password_reset.html', {'form': form})
+# @login_required
+# def password_change(request):
+#     user = request.user
+#     form = SetPasswordForm(user)
+#     return render(request, 'home/password_reset.html', {'form': form})
 
 def activate(request, uidb64, token):
     user = get_user_model()
@@ -245,20 +244,18 @@ def profile(request, username):
         
     follower_count = profile.followed_by.count()
     following_count = profile.follows.count()
+    unread_notifications_count = Notification.objects.filter(user=request.user, is_read=False).count() if request.user.is_authenticated else 0
+
     context = {
         'profile': profile,
         'user_posts': user_posts, 
         'follower_count': follower_count,
         'following_count': following_count,
+        'unread_notifications_count': unread_notifications_count
            
     }
     return render(request, 'home/profile.html', context)
 
-
-
-            
-            
-    
 #@login_required(login_url='/login/')
 def profile_settings(request):
     if request.method == 'POST':

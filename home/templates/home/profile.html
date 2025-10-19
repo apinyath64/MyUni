@@ -1,272 +1,318 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{% static 'js/profile.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
 
-    <title>profile</title>
-    <style>
-        #user-dropdown {
-          position: absolute;
-          top: 3rem;
-          right: 2rem;
-        }
-        .logo-font {
-          font-family: 'Pacifico', cursive;
-        }
-    </style>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="{% static 'js/profile.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/3.1.2/flowbite.js"
+    integrity="sha512-c9m0HP/+jR+ZgMbKqLHtvn8nT0IiJiw0NhgSWedfZWi1QvGS39Kz2w4Sbo7rD1eYA+fm7ypCLNR0gbAJv2mHQA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> -->
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" 
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer" 
+  />
+
+  <title>profile</title>
 </head>
+
 <body class="bg-[#FBF8EF]">
-    <nav class="fixed px-4 top-0 z-50 w-full bg-[#FFEC9E] text-[#594100] px-6 border-b">
-        <div class="px-3 py-3 lg:px-5 lg:pl-3">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center justify-start rtl:justify-end p-2 px-4">
-              <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" id="menu-icon" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
-                  <span class="sr-only">Open sidebar</span>
-                  <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                     <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
-                  </svg>
-               </button>
-              <a href="{% url 'home' %}" class="flex ms-2 md:me-24">
-                <span class="logo-font self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">MyUni</span>
+  <nav class="px-6 bg-[#FFEC9E]" style="font-family: 'Pacifico', cursive; ">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-4">
+
+      <a href="{% url 'home' %}" class="text-[#594100] flex items-center space-x-3 rtl:space-x-reverse">
+        <span class="logo self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MyUni</span>
+      </a>
+
+      <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+        <button type="button"
+          class="relative flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+          id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
+          data-dropdown-placement="bottom">
+          <span class="sr-only">Open user menu</span>
+          <img class="w-12 h-12 rounded-full" src="{{ profile.profileimg.url }}" alt="{{ profile.user.username }}" />
+          {% if unread_notifications_count %}
+          {% if unread_notifications_count > 0 %}
+            <span id="notify-count" class="absolute -top-1 -right-1 inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium bg-red-600 text-white rounded-full">{{ unread_notifications_count }}</span>
+          {% endif %}
+          {% endif %}
+        </button>
+
+        <!-- Dropdown menu -->
+        <div
+          class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow-sm border border-[#594100] "
+          id="user-dropdown">
+          <div class="px-4 py-3 text-[#594100]">
+            <a href="{% url 'profile' user.username %}">
+              <span class="block text-md font-semibold">{{ profile.user.username }}</span>
+            </a>
+            <span class="block text-sm truncate">{{ profile.user.email }}</span>
+          </div>
+          <ul class="py-2 text-[#594100]" aria-labelledby="user-menu-button">
+            <li>
+              <a href="{% url 'notifications' %}" class="block px-4 py-2 text-sm hover:bg-[#ffec9e]"
+                style="text-decoration: none;" role="menuitem">
+                การแจ้งเตือน
+                {% if unread_notifications_count %}
+                <span
+                  class="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium bg-red-600 text-white rounded-full">
+                  {% if unread_notifications_count > 0 %}
+                  {{ unread_notifications_count }}
+                  {% endif %}
+                </span>
+                {% endif %}
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'profile_settings' %}" class="block px-4 py-2 text-sm hover:bg-[#ffec9e]"
+                style="text-decoration: none;" role="menuitem">ตั้งค่าโปรไฟล์</a>
+            </li>
+            <li>
+              <a href="{% url 'logout_user' %}" class="block px-4 py-2 text-sm hover:text-white hover:bg-red-600"
+                style="text-decoration: none;" role="menuitem">ออกจากระบบ</a>
+            </li>
+
+          </ul>
+        </div>
+
+      </div>
+
+      <button data-collapse-toggle="navbar-user" type="button"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        aria-controls="navbar-user" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M1 1h15M1 7h15M1 13h15" />
+        </svg>
+      </button>
+
+      <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+        <ul
+          class="flex flex-col font-medium p-4 md:p-0 mt-4  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
+          style="font-family: 'Pacifico' ">
+
+          <li>
+            <a href="{% url 'profile_settings' %}"
+              class="block py-2 px-3 bg-white hover:bg-opacity-70 text-[#594100] border border-[#594100] rounded-md md:p-2">
+              ตั้งค่าโปรไฟล์
+              <i class="fa-solid fa-calendar-days"></i>
+            </a>
+          </li>
+
+          {% if user.is_admin %}
+          <li>
+            <a href="{% url 'manage_accounts' %}"
+              class="block py-2 px-3 bg-white hover:bg-opacity-70 text-[#594100] border border-[#594100] rounded-md md:p-2">
+              จัดการบัญชีผู้ใช้
+              <i class="fa-solid fa-user"></i>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'manage_posts' %}"
+              class="block py-2 px-3 bg-white hover:bg-opacity-70 text-[#594100] border border-[#594100] rounded-md md:p-2">
+              จัดการโพสต์
+              <i class="fas fa-pencil-alt"></i>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      
+
+    </div>
+  </nav>
+
+
+  <div class="container mx-auto mt-12 px-12 text-[#594100]" style="height: auto;">
+    <section class="user-detail pr-8 p-4 bg-white flex flex-col">
+      <!-- <a href="{% url 'home' %}" class="text-white logo-font">Home</a> -->
+      <div class="flex justify-center items-center">
+        <img src="{{ profile.profileimg.url }}" alt="profile image" class="w-28 h-28 rounded-full"><br>
+      </div>
+      <div class="flex flex-col gap-1 text-center">
+        <p class="text-2xl font-bold">@{{ profile.user.username }}</p>
+        <span class="text-sm">{{ profile.bio }}</span>
+        <span class="text-sm">{{ profile.location }}</span>
+        {% if user.is_authenticated and profile.user == user %}
+        <a href="{% url 'profile_settings' %}" class="">
+          <i class="fas fa-edit"></i>
+          Setting Your Profile
+        </a>
+
+        {% endif %}
+      </div>
+
+      <div class="flex justify-center items-center gap-2 my-3">
+        <div class="font-semibold text-center mx-4">
+          <p class="">{{ user_posts.count }}</p>
+          <span class="">Posts</span>
+        </div>
+        <div class="font-semibold text-center mx-4">
+          <button onclick="togglePopup()">
+            <p class="">{{ follower_count }}</p>
+            <span class="">Followers</span>
+          </button>
+        </div>
+        <div class="font-semibold text-center mx-4">
+          <button onclick="togglePopup2()">
+            <p class="">{{ following_count }}</p>
+            <span class="">Following</span>
+
+          </button>
+        </div>
+      </div>
+
+      <!-- popup -->
+      <div class="popup" id="popup-1">
+        <div class="overlay"></div>
+        <div class="content">
+          <div class="close-button" onclick="togglePopup()">&times;</div>
+          <div class="flex flex-col items-start my-5">
+            <strong>Followed By</strong>
+            {% for following in profile.followed_by.all %}
+            <div class="flex items-center mb-2">
+              <img class="w-8 h-8 rounded-full mr-2" src="{{ following.user.profile.profileimg.url }}">
+              <a href="{% url 'profile' following.user.username %}" class="text-gray-700">
+                {{ following }}
               </a>
             </div>
-            <div class="flex items-center">
-                <div class="flex items-center ms-3 gap-6">
-                  <a href="{% url 'home' %}" class="logo-font rounded p-2 px-4 border border-[#594100]">แผนที่</a>
-                  <div>
-                    <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" id="user-menu-button" data-dropdown-toggle="user-dropdown">
-                      <span class="sr-only">Open user menu</span>
-                      <img class="w-10 h-10 rounded-full border border-gray-300" src="{{ user.profile.profileimg.url }}" alt="{{ user.profile.user.username }}">
-                    </button>
-                  </div>
-                  <div class="z-50 hidden my-4 text-base list-none bg-white border border-[#594100] divide-y divide-gray-100 rounded shadow" id="user-dropdown">
-                    <div class="px-4 py-3" role="none">
-                      <p class="text-sm" role="none">{{ user.profile.user.username }}</p>
-                      <p class="text-sm font-medium truncate" role="none">{{ user.profile.user.email }}</p>
-                    </div>
-                    <ul class="py-1" role="none">
-        
-                        <li>
-                          <a href="{% url 'notifications' %}" class="block px-4 py-2 text-sm hover:bg-[#FFEC9E]">
-                            การแจ้งเตือน
-                            {% if unread_notifications_count %}
-                              <span class="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-white bg-red-500 rounded-full">
-                                {% if unread_notifications_count > 0  %}
-                                  {{ unread_notifications_count }}
-                                {% endif %}
-                              </span>
-                            {% endif %}
-                          </a>
-                        </li>
-                        <li>
-                            <a href="{% url 'profile_settings' %}" class="block px-4 py-2 text-sm hover:bg-[#FFEC9E]" role="menuitem">ตั้งค่าโปรไฟล์</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'logout_user' %}" class="block px-4 py-2 text-sm hover:text-white hover:bg-red-600" role="menuitem">ออกจากระบบ</a>
-                        </li>
-
-                    </ul>
-                  </div>
-                </div>
-              </div>
+            {% endfor %}
           </div>
         </div>
-    </nav>
-    
-    
-    <div class="container mx-auto mt-28 px-12 text-[#594100]" style="height: auto; width: 70vw;">
-      <section class="user-detail pr-8 p-4 bg-white flex flex-col">
-        <!-- <a href="{% url 'home' %}" class="text-white logo-font">Home</a> -->
-        <div class="flex justify-center items-center">
-          <img src="{{ profile.profileimg.url }}" alt="profile image" class="w-28 h-28 rounded-full"><br>
+      </div>
+      <!-- popup -->
+      <div class="popup" id="popup-2">
+        <div class="overlay" onclick="togglePopup2()"></div>
+        <div class="content">
+          <div class="close-button" onclick="togglePopup2()">&times;</div>
+          <div class="flex flex-col items-start my-5 max-h-80 overflow-y-auto">
+            <strong>Following</strong>
+            {% for following in profile.follows.all %}
+            <div class="flex items-center mb-2">
+              <img class="w-8 h-8 rounded-full mr-2" src="{{ following.user.profile.profileimg.url }}">
+              <a href="{% url 'profile' following.user.username %}" class="text-gray-700">
+                {{ following }}<br>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
         </div>
-        <div class="flex flex-col gap-1 text-center">
-          <p class="text-2xl font-bold">@{{ profile.user.username }}</p>
-          <span class="text-sm">{{ profile.bio }}</span>
-          <span class="text-sm">{{ profile.location }}</span>
-          {% if user.is_authenticated and profile.user == user %}
-          <a href="{% url 'profile_settings' %}" class="">
-            <i class="fas fa-edit"></i>
-            Setting Your Profile
-          </a><hr>
-          <a href="{% url 'password_change' %}" class="text-sm">
-            <i class="fas fa-key"></i>
-            Change password?
-          </a>
+      </div>
+
+
+      {% if user.is_authenticated and user != profile.user %}
+      <div class="flex justify-center gap-2 my-5">
+        <form method="POST">
+          {% csrf_token %}
+          {% if profile in user.profile.follows.all%}
+          <button type="submit" name="follow" value="unfollow"
+            class="bg-white border border-gray-500 px-10 py-2 rounded-full shadow-lg">
+            Unfollow
+          </button>
+          {% else %}
+          <button type="submit" name="follow" value="follow"
+            class="bg-black px-10 py-2 rounded-full text-white shadow-lg">
+            Follow
+          </button>
+          {% endif %}
+        </form>
+
+        <!-- <button class="bg-white border border-gray-500 px-10 py-2 rounded-full shadow-lg">Message</button> -->
+      </div>
+      {% endif %}
+
+
+    </section>
+
+    <section class="profile-detail bg-white p-4 mb-8">
+      <div class="mx-auto ">
+
+        <div id="posts">
+          {% if user_posts %}
+          <div class="relative my-4 mx-auto text-left shadow-xl" style="max-width: 800px;">
+            <div class="bg-[#FFEC9E] p-4">
+              <h2 class="text-xl font-bold tracking-tight sm:text-2xl ps-3">
+                <i class="fas fa-edit mr-2"></i>Posts
+              </h2>
+            </div>
+            <div class="">
+              <ul>
+                {% for post in user_posts %}
+                <div class="bg-white p-4 shadow-xl border border-gray-200">
+                  <li class=" text-xl"><a href="{% url 'post_content' post_id=post.id  %}">{{ post.title }}</a></li>
+
+                  <div id="user" class="mt-6 flex items-center">
+                    <div class="flex-shrink-0">
+                      <a href="#">
+                        <span class="sr-only">{{ post.user.username }}</span>
+                        <img class="h-10 w-10 rounded-full" src="{{ post.user.profile.profileimg.url }}"
+                          alt="{{ post.user.username }}">
+                      </a>
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm text-gray-700 font-medium">
+                        <a href="#" class="hover:underline">{{ post.user.username }}</a>
+                      </p>
+                      <div class="flex space-x-1 text-sm">
+                        <p class="text-gray-400">{{ post.created_at }}</p>
+                      </div>
+                    </div>
+                    <div id="likes-comments" class="ml-auto flex items-center gap-4">
+                      <div id="likes" class="text-red-500">
+                        <i class="fas fa-heart">
+                          <span class="text-gray-400">{{ post.likes.count }}</span>
+                        </i>
+                      </div>
+                      <div id="comments" class="flex text-[#537D5D]">
+                        <i class="fas fa-comment">
+                          <span class="text-gray-400">{{ post.comments.count }}</span>
+                        </i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          {% else %}
+          <div class="flex items-center justify-center">
+            <p class="text-md">ไม่มีโพสต์</p>
+            <i class="fas fa-pencil-alt"></i>
+          </div>
           {% endif %}
         </div>
 
-        <div class="flex justify-center items-center gap-2 my-3">
-          <div class="font-semibold text-center mx-4">
-              <p class="">{{ user_posts.count }}</p>
-              <span class="">Posts</span>
-          </div>
-          <div class="font-semibold text-center mx-4">
-              <button onclick="togglePopup()">
-                <p class="">{{ follower_count }}</p>
-                <span class="">Followers</span>
-              </button>
-          </div>
-          <div class="font-semibold text-center mx-4">
-              <button onclick="togglePopup2()">
-                <p class="">{{ following_count }}</p>
-                <span class="">Following</span>
-                
-              </button>
-          </div>
-        </div>
 
-        <!-- popup -->
-        <div class="popup" id="popup-1">
-          <div class="overlay"></div>
-          <div class="content">
-            <div class="close-button" onclick="togglePopup()">&times;</div>
-            <div class="flex flex-col items-start my-5">
-              <strong>Followed By</strong>
-              {% for following in profile.followed_by.all %}
-                <div  class="flex items-center mb-2">
-                  <img class="w-8 h-8 rounded-full mr-2" src="{{ following.user.profile.profileimg.url }}">
-                  <a href="{% url 'profile' following.user.username %}" class="text-gray-700">
-                    {{ following }}
-                  </a>
-                </div>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-        <!-- popup -->
-        <div class="popup" id="popup-2">
-          <div class="overlay" onclick="togglePopup2()"></div>
-          <div class="content">
-            <div class="close-button" onclick="togglePopup2()">&times;</div>
-            <div class="flex flex-col items-start my-5 max-h-80 overflow-y-auto">
-              <strong>Following</strong>
-              {% for following in profile.follows.all %}
-                <div class="flex items-center mb-2">
-                  <img class="w-8 h-8 rounded-full mr-2" src="{{ following.user.profile.profileimg.url }}">
-                  <a href="{% url 'profile' following.user.username %}" class="text-gray-700">
-                    {{ following }}<br>
-                  </a>
-                </div>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-        
+        <div id="events"></div>
 
-        {% if user.is_authenticated and user != profile.user %}
-        <div class="flex justify-center gap-2 my-5">
-          <form method="POST">
-            {% csrf_token %}
-            {% if profile in user.profile.follows.all%}
-              <button type="submit" name="follow" value="unfollow" class="bg-white border border-gray-500 px-10 py-2 rounded-full shadow-lg">
-                Unfollow
-              </button>
-            {% else %}
-              <button type="submit" name="follow" value="follow" class="bg-black px-10 py-2 rounded-full text-white shadow-lg">
-                Follow
-              </button>
-            {% endif %}
-          </form>
-
-          <!-- <button class="bg-white border border-gray-500 px-10 py-2 rounded-full shadow-lg">Message</button> -->
-        </div>
-        {% endif %}
-
-        
-      </section>
-  
-      <section class="profile-detail bg-white p-4 mb-8">
-        <div class="mx-auto ">
-          
-          <div id="posts">
-            {% if user_posts %}
-              <div class="relative my-4 mx-auto text-left shadow-xl" style="max-width: 800px;">
-                <div class="bg-[#FFEC9E] p-4"><h2 class="text-xl font-bold tracking-tight sm:text-2xl ps-3">
-                  <i class="fas fa-edit mr-2"></i>Posts</h2>
-                </div>
-                <div class="">
-                  <ul>
-                      {% for post in user_posts %}
-                          <div class="bg-white p-4 shadow-xl border border-gray-200">
-                            <li class=" text-xl"><a href="{% url 'post_content' post_id=post.id  %}">{{ post.title }}</a></li>
-
-                            <div id="user" class="mt-6 flex items-center">
-                              <div class="flex-shrink-0">
-                                <a href="#">
-                                  <span class="sr-only">{{ post.user.username }}</span>
-                                  <img class="h-10 w-10 rounded-full" src="{{ post.user.profile.profileimg.url }}" alt="{{ post.user.username }}">
-                                </a>
-                              </div>
-                              <div class="ml-3">
-                                <p class="text-sm text-gray-700 font-medium">
-                                  <a href="#" class="hover:underline">{{ post.user.username }}</a>
-                                </p>
-                                <div class="flex space-x-1 text-sm">
-                                  <p class="text-gray-400">{{ post.created_at }}</p>
-                                </div>
-                              </div>
-                              <div id="likes-comments" class="ml-auto flex items-center gap-4">
-                                <div id="likes" class="text-red-500">
-                                  <i class="fas fa-heart">
-                                    <span class="text-gray-400">{{ post.likes.count }}</span>
-                                  </i>
-                                </div>
-                                <div id="comments" class="flex text-[#537D5D]">
-                                  <i class="fas fa-comment">
-                                    <span class="text-gray-400">{{ post.comments.count }}</span>
-                                  </i>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                      {% endfor %}
-                  </ul>
-                </div>
-              </div>
-            {% else %}
-              <div class="text-center">
-                <i class="fas fa-pencil-alt">
-                  <p class="text-lg">ไม่มีโพสต์</p>
-                </i> 
-              </div>
-            {% endif %}
-          </div>
-
-
-          <div id="events"></div>
-            
-          </div>
-      </section>
-    </div>
+      </div>
+    </section>
+  </div>
 
 
 
 
-    <script>
-      const profileImageButton = document.getElementById('user-menu-button');
-      const userDropdownMenu = document.getElementById('user-dropdown');
-  
-      profileImageButton.addEventListener('click', function() {
-          userDropdownMenu.classList.toggle('hidden');
-      });
+  <script>
+    
+    function showPosts() {
+      document.getElementById('posts').style.display = 'block';
+      document.getElementById('events').style.display = 'none';
+    }
 
-      function showPosts() {
-        document.getElementById('posts').style.display = 'block';
-        document.getElementById('events').style.display = 'none';
-      }
-
-      function showEvents() {
-          document.getElementById('posts').style.display = 'none';
-          document.getElementById('events').style.display = 'block';
-      }
-    </script>
+    function showEvents() {
+      document.getElementById('posts').style.display = 'none';
+      document.getElementById('events').style.display = 'block';
+    }
+  </script>
 </body>
+
 </html>

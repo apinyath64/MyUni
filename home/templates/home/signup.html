@@ -5,70 +5,93 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
-  <title>Signup Page</title>
+  <title>MyUni | Signup</title>
 
 </head>
 
 <body class="bg-[#FFEC9E]">
-  <header class="">
-    {% include 'home/base.html' %}
-  </header>
 
-  <div class="h-screen mt-24 flex items-center justify-center text-[#594100]">
-    <div class="p-12 mt-24">
-      <div class="bg-white border border-[#594100] px-12 py-4 rounded" style="width: 40vw;">
-        <div class="p-4 space-y-4 md:space-y-6 sm:p-8">
-          <h1 class="text-xl text-center font-bold leading-tight tracking-tight md:text-2xl">
-            สร้างบัญชีผู้ใช้ของคุณ
-          </h1>
-          <form class="space-y-4 md:space-y-6" method="post" action="{% url 'signup' %}">
-            {% csrf_token %}
-            <div>
-              <label for="first_name" class="block text-sm font-medium">ชื่อ</label>
-              <input type="text" id="first_name" name="first_name"
-                class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
-                placeholder="Jane">
-            </div>
-            <div>
-              <label for="last_name" class="block text-sm font-medium">นามสกุล</label>
-              <input type="text" id="last_name" name="last_name"
-                class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
-                placeholder="Doe">
-            </div>
-            <div>
-              <label for="username" class="block text-sm font-medium">ชื่อผู้ใช้</label>
-              <input type="text" id="username" name="username" required
-                class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
-                placeholder="Jane">
-            </div>
-            <div>
-              <label for="email" class="block text-sm font-medium">อีเมล</label>
-              <input type="email" id="email" name="email" required
-                class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
-                placeholder="email.example@co.th">
-            </div>
-            <div>
-              <label for="password1" class="block text-sm font-medium">รหัสผ่าน</label>
-              <input type="password" id="password1" name="password1" required
-                class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
-                placeholder="••••••••">
-            </div>
-            <div>
-              <label for="password2" class="block text-sm font-medium">ยืนยันรหัสผ่าน</label>
-              <input type="password" id="password2" name="password2" required
-                class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
-                placeholder="••••••••">
-            </div>
-            <button type="submit"
-              class="w-full text-white bg-[#594100] focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded text-sm px-4 p-2 text-center">
-              สร้างบัญชี
-            </button>
-            <p class="text-sm font-light text-gray-500">
-              คุณมีบัญชีแล้ว? <a href="{% url 'login_user' %}"
-                class="font-medium text-blue-600 hover:underline">เข้าสู่ระบบที่นี่</a>
-            </p>
-          </form>
+  <div class="min-h-screen flex flex-col items-center justify-center text-[#594100] py-6 px-2">
+    <div class="text-center mt-8 mb-6 max-w-2xl">
+      <h1 style="font-family: 'Pacifico', cursive;"
+        class="text-3xl md:text-4xl lg:text-5xl text-center mb-4 font-semibold">
+        ยินดีต้อนรับเข้าสู่ MyUni
+      </h1>
+      <p class="text-lg md:text-xl text-gray-700 mb-2">
+        พบกับชุมชนออนไลน์แบบใหม่!
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 text-sm md:text-base">
+        <div class="flex flex-col items-center p-4">
+          <span class="text-2xl mb-2">🗺️</span>
+          <i class="fa-solid fa-map-location-dot fa-bounce" style="color: #0e72be;"></i>
+          <p class="font-medium">แผนที่แบบอินเตอร์แอกทีฟ</p>
+          <p class="text-gray-600 text-sm mt-1">ค้นหาสถานที่ต่างๆ ในมหาวิทยาลัย</p>
         </div>
+        <div class="flex flex-col items-center p-4">
+          <span class="text-2xl mb-2">🧑‍🤝‍🧑</span>
+          <p class="font-medium">ชุมชนสังคมออนไลน์</p>
+          <p class="text-gray-600 text-sm mt-1">แบ่งปันเรื่องราวและติดตามเพื่อน</p>
+        </div>
+        <div class="flex flex-col items-center p-4">
+          <span class="text-2xl mb-2">📅</span>
+          <p class="font-medium">กิจกรรมและอีเวนต์</p>
+          <p class="text-gray-600 text-sm mt-1">ค้นหากิจกรรมที่น่าสนใจในมหาวิทยาลัย</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white border border-[#594100] px-4 sm:px-8 md:px-12 py-6 md:py-8 rounded w-full max-w-md mx-auto">
+      <div class="p-4 space-y-4 md:space-y-6 sm:p-8">
+        <h1 class="text-xl text-center font-bold leading-tight tracking-tight md:text-2xl">
+          สร้างบัญชีผู้ใช้ของคุณ
+        </h1>
+        <form class="space-y-4 md:space-y-6" method="post" action="{% url 'signup' %}">
+          {% csrf_token %}
+          <div>
+            <label for="first_name" class="block text-sm font-medium">ชื่อ</label>
+            <input type="text" id="first_name" name="first_name"
+              class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
+              placeholder="Jane">
+          </div>
+          <div>
+            <label for="last_name" class="block text-sm font-medium">นามสกุล</label>
+            <input type="text" id="last_name" name="last_name"
+              class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
+              placeholder="Doe">
+          </div>
+          <div>
+            <label for="username" class="block text-sm font-medium">ชื่อผู้ใช้</label>
+            <input type="text" id="username" name="username" required
+              class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
+              placeholder="Jane">
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium">อีเมล</label>
+            <input type="email" id="email" name="email" required
+              class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
+              placeholder="email.example@co.th">
+          </div>
+          <div>
+            <label for="password1" class="block text-sm font-medium">รหัสผ่าน</label>
+            <input type="password" id="password1" name="password1" required
+              class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
+              placeholder="••••••••">
+          </div>
+          <div>
+            <label for="password2" class="block text-sm font-medium">ยืนยันรหัสผ่าน</label>
+            <input type="password" id="password2" name="password2" required
+              class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
+              placeholder="••••••••">
+          </div>
+          <button type="submit"
+            class="w-full text-white bg-[#594100] focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded text-sm px-4 p-2 text-center">
+            สร้างบัญชี
+          </button>
+          <p class="text-sm font-light text-gray-500">
+            คุณมีบัญชีแล้ว? <a href="{% url 'login_user' %}"
+              class="font-medium text-blue-600 hover:underline">เข้าสู่ระบบที่นี่</a>
+          </p>
+        </form>
       </div>
     </div>
   </div>

@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>MyUni | Remove event</title>
+    <title>MyUni | Delete post</title>
 </head>
 <body class="bg-[#FBF8EF]">
     <div class="min-h-screen flex items-center justify-center text-[#594100]">
         <div class="bg-white border border-[#594100] px-8 py-4 rounded mx-2">
-            <h1 class="text-xl font-bold text-center mt-4">ยืนยันการลบกิจกรรม</h1>
+            <h1 class="text-xl font-bold text-center mt-4">ยืนยันการลบโพสต์</h1>
             <div class="p-6 mt-6">
                 <form action="" method="POST">
                     {% csrf_token %}
-                    <p class="pt-4 pb-6">กรุณากดปุ่ม <span class="underline underline-offset-1">ยืนยันการลบ</span> เพื่อลบกิจกรรม <span class="text-lg font-semibold"> {{ event.title }}</span></p>
+                    <p class="pt-4 pb-6">กรุณากดปุ่ม <span class="underline underline-offset-1">ยืนยันการลบ</span> เพื่อลบโพสต์ <span class="text-lg font-semibold"> {{ post.title }}</span></p>
                     <div class="flex justify-center gap-12 mt-8">
                         <button class="bg-red-500 text-white py-2 px-4 rounded" type="submit">ยืนยันการลบ</button>
-                        <a href="{{ referer_url }}" class="px-4 py-2 hover:underline">ย้อนกลับ</a>
+                        <!-- <a href="{{ referer_url }}" class="px-4 py-2 hover:underline">ย้อนกลับ</a> -->
                     </div>
                 </form>
             </div>

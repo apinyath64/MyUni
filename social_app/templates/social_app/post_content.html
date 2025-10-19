@@ -5,203 +5,218 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://unpkg.com/htmx.org@1.9.12"></script>
   <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
-  <title>Post</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/3.1.2/flowbite.js"
+    integrity="sha512-c9m0HP/+jR+ZgMbKqLHtvn8nT0IiJiw0NhgSWedfZWi1QvGS39Kz2w4Sbo7rD1eYA+fm7ypCLNR0gbAJv2mHQA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
+  <title>MyUni | Post content</title>
   <style>
-    #user-dropdown {
+    nav {
       position: absolute;
-      top: 3rem;
-      right: 2rem;
-    }
-
-    .logo-font {
-      font-family: 'Pacifico', cursive;
+      top: 0;
+      width: 100%;
+      z-index: 9999;
     }
   </style>
-
 
 </head>
 
 <body class="bg-[#FBF8EF]">
-  <nav class="bg-[#FFEC9E] text-[#594100]">
-    <div class="flex flex-wrap items-center justify-between mx-auto p-4 px-12">
+  <nav class="px-6 py-4 bg-[#FFEC9E]" style="font-family: 'Pacifico', cursive; ">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto mt-4 ">
 
-      <button class="self-center text-2xl logo-font font-semibold whitespace-nowrap"><a href="{% url 'home' %}"
-          class="flex items-center space-x-3 rtl:space-x-reverse">MyUni</a></button>
+      <a href="{% url 'home' %}" class="text-[#594100] flex items-center space-x-3 rtl:space-x-reverse">
+        <span class="logo self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MyUni</span>
+      </a>
 
-      <div class="flex items-center">
-          <div class="flex items-center justify-between gap-6">
-            <button class="border border-[#594100] p-2 px-4 rounded shadow-lg">
-              <a href="{% url 'home' %}" class="">แผนที่</a>
-            </button>
-            <button class="border border-[#594100] p-2 px-4 rounded shadow-lg">
-              <a href="{% url 'event_calendar' %}" class="">ปฏิทินกิจกรรม</a>
-            </button>
-            {% if user.is_admin %}
-              <button class="text-gray-600 p-2 bg-white bg-opacity-50 rounded-md shadow-lg hover:text-gray-700">
-                <a href="{% url 'manage_accounts' %}" class="">จัดการบัญชีผู้ใช้</a>
-              </button>
-              <button class="text-gray-600 p-2 bg-white bg-opacity-50 rounded-md shadow-lg hover:text-gray-700">
-                <a href="{% url 'manage_posts' %}" class="">จัดการโพสต์</a>
-              </button>
-            {% endif %}
-            <div>
-              <button type="button" onclick="openFunc()" class="relative flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300">
-                  <img class="w-10 h-10 border border-gray-300 rounded-full" src="{{ profile.profileimg.url }}" alt="{{ profile.user.username }}">
-                  {% if unread_notifications_count > 0 %}
-                    <span class="absolute top-0 right-0 transform translate-x-2 -translate-y-2 bg-red-500 text-white rounded-full px-1.5 py-0.5 text-xs">{{ unread_notifications_count }}</span>
-                  {% endif %} 
-                </button>
-            </div>
-            <div class="z-50 hidden my-4 text-base list-none bg-white border border-[#594100] divide-y divide-gray-100 rounded shadow" id="user-dropdown">
-              <div class="px-4 py-3" role="none">
-                <a href="{% url 'profile' user.username %}"><p class="text-sm" role="none">{{ profile.user.username }}</p></a>
-                <p class="text-sm font-medium truncate" role="none">{{ profile.user.email }}</p>
-              </div>
-              <ul class="py-1" role="none">
-                <li>
-                  <a href="{% url 'notifications' %}" class="block px-4 py-2 text-sm hover:bg-[#FFEC9F]">
-                    การแจ้งเตือน
-                    {% if unread_notifications_count %}
-                      <span class="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-white bg-red-500 rounded-full">
-                        {% if unread_notifications_count > 0  %}
-                          {{ unread_notifications_count }}
-                        {% endif %}
-                      </span>
-                    {% endif %}
-                  </a>
-                </li>
-                <li>
-                  <a href="{% url 'profile' profile.user.username %}" class="block px-4 py-2 text-sm hover:bg-[#FFEC9F]" role="menuitem">ตั้งค่าโปรไฟล์</a>
-                </li>
-                <li>
-                  <a href="{% url 'logout_user' %}" class="block px-4 py-2 text-sm hover:text-white hover:bg-red-600" role="menuitem">ออกจากระบบ</a>
-                </li>
-              </ul>
-            </div>
+      <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+        <button type="button"
+          class="relative flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+          id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
+          data-dropdown-placement="bottom">
+          <span class="sr-only">Open user menu</span>
+          <img class="w-12 h-12 rounded-full" src="{{ profile.profileimg.url }}" alt="{{ profile.user.username }}" />
+          {% if unread_notifications_count %}
+          {% if unread_notifications_count > 0 %}
+            <span id="notify-count" class="absolute -top-1 -right-1 inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium bg-red-600 text-white rounded-full">{{ unread_notifications_count }}</span>
+          {% endif %}
+          {% endif %}
+        </button>
 
+        <!-- Dropdown menu -->
+        <div
+          class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow-sm border border-[#594100] "
+          id="user-dropdown">
+          <div class="px-4 py-3 text-[#594100]">
+            <a href="{% url 'profile' user.username %}">
+              <span class="block text-md font-semibold">{{ profile.user.username }}</span>
+            </a>
+            <span class="block text-sm truncate">{{ profile.user.email }}</span>
           </div>
+          <ul class="py-2 text-[#594100]" aria-labelledby="user-menu-button">
+            <li>
+              <a href="{% url 'notifications' %}" class="block px-4 py-2 text-sm hover:bg-[#ffec9e]"
+                style="text-decoration: none;" role="menuitem">
+                การแจ้งเตือน
+                {% if unread_notifications_count %}
+                <span
+                  class="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium bg-red-600 text-white rounded-full">
+                  {% if unread_notifications_count > 0 %}
+                  {{ unread_notifications_count }}
+                  {% endif %}
+                </span>
+                {% endif %}
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'profile_settings' %}" class="block px-4 py-2 text-sm hover:bg-[#ffec9e]"
+                style="text-decoration: none;" role="menuitem">ตั้งค่าโปรไฟล์</a>
+            </li>
+            <li>
+              <a href="{% url 'logout_user' %}" class="block px-4 py-2 text-sm hover:text-white hover:bg-red-600"
+                style="text-decoration: none;" role="menuitem">ออกจากระบบ</a>
+            </li>
+
+          </ul>
+        </div>
+
       </div>
+
+      <button data-collapse-toggle="navbar-user" type="button"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        aria-controls="navbar-user" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M1 1h15M1 7h15M1 13h15" />
+        </svg>
+      </button>
+
+      <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+        <ul
+          class="flex flex-col font-medium p-4 md:p-0 mt-4  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
+          style="font-family: 'Pacifico' ">
+
+          <li>
+            <a href="{% url 'home' %}"
+              class="block py-2 px-3 bg-white hover:bg-opacity-70 text-[#594100] border border-[#594100] rounded-md md:p-2">
+              หน้าหลัก
+              <i class="fa-solid fa-house"></i>
+            </a>
+          </li>
+
+          <li>
+            <a href="{% url 'event_from_calendar' %}"
+              class="block py-2 px-3 bg-white hover:bg-opacity-70 text-[#594100] border border-[#594100] rounded-md md:p-2">
+              เพิ่มกิจกรรม
+              <i class="fa-solid fa-calendar-plus"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+
 
     </div>
   </nav>
 
-  <div class="mx-20 mt-2 text-[#594100]">
-    <div class="px-10 pt-10 mx-auto">
-      <!-- Main content -->
-      <div class="max-w-5xl px-10 py-6 mx-auto bg-[#FFEC9E] rounded">
+  <div class="min-h-sceen mt-28 px-4 lg:px-24 xl:px-24">
 
-        <div class="mt-2">
+    <div class="p-4 mx-auto bg-[#FFEC9E] text-[#594100] rounded">
+      <!--post details-->
+      <div class="mt-2">
+        <div class="flex items-center justify-between">
           <h1 class="sm:text-3xl md:text-2xl lg:text-2xl xl:text-2xl font-bold">{{ post.title }}</h1>
-          <div class="flex justify-start items-center mt-2">
-            <p class="text-xs ml-5">{{ post.created_at }}</p>
-          </div>
-
-          <div class="font-light">
-            <a href="{% url 'profile' post.user.username %}" class="flex items-center mt-6 mb-6"><img
-                src="{{ post.user.profile.profileimg.url }}" alt=""
-                class="hidden object-cover w-14 h-14 mx-4 rounded-full sm:block">
-              <p class="font-bold">@{{ post.user.username }}</p>
-            </a>
-          </div>
-        </div>
-
-        <!--post content-->
-        <div class="max-w-4xl px-10 mx-auto">
-          <div>
-            <p class="mt-2 p-8 text-md">{{ post.content }}</p>
-          </div>
-          {% if post.images.all %}
-          <div class="p-8">
-            {% for image in post.images.all %}
-            <img src="{{ image.image.url }}" alt="Post image" class="w-full"
-              style="max-height: 300px; max-width: 300px; object-fit: cover;">
-            {% endfor %}
+          {% if user.is_authenticated and post.user == request.user %}
+          <div class="flex gap-4 text-sm">
+            <a class="flex items-center" href="{% url 'edit_post' post.id %}">แก้ไข<i
+                class="fas fa-edit"></i></a>
+            <a class="flex items-center" href="{% url 'delete_post' post.id %}">ลบ<i
+                class="fas fa-trash-alt"></i></a>
           </div>
           {% endif %}
         </div>
+        <div class="flex justify-start items-center mt-2">
+          <p class="text-xs">{{ post.created_at }}</p>
+        </div>
 
-
-        <div class="flex items-center gap-6 [&>a:hover]:underline">
-
-          {% include 'social_app/likes.html' %}
-          <!-- comment -->
-          <a href="" class="flex items-center">
-            <svg fill="none" viewBox="0 0 24 24" class="w-4 h-4 mr-1" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
-            </svg>
-            <span id="commentscount-{{ post.id }}" class="pl-2">{{ comment_count }}</span>
+        <div class="font-light mx-auto">
+          <a href="{% url 'profile' post.user.username %}" class="flex items-center mt-6 mb-6">
+            <img src="{{ post.user.profile.profileimg.url }}" alt=""
+              class="hidden object-cover w-14 h-14 mx-4 rounded-full sm:block">
+            <p class="font-bold">@{{ post.user.username }}</p>
           </a>
         </div>
-
-
       </div>
 
-    </div>
-  </div>
-
-
-
-
-  <!--form comments-->
-  <div class="max-w-4xl py-6 xl:px-8 flex justify-center mx-auto">
-    <div class="w-full mt-16 md:mt-0">
-      <form
-        class="relative z-10 h-auto p-8 py-10 overflow-hidden bg-[#FFEC9E] rounded px-7"
-        enctype="multipart/form-data" hx-post="{% url 'comment-sent' post_id=post.id %}" hx-target="#comments-section"
-        hx-swap="afterbegin" _="on htmx:afterRequest reset() me">
-        {% csrf_token %}
+      <div class="px-6">
+        <div class="py-4">
+          <p class="text-md">{{ post.content }}</p>
+        </div>
+        {% if post.images.all %}
         <div class="">
-          {{ commentform.content }}
+          {% for image in post.images.all %}
+          <img src="{{ image.image.url }}" alt="Post image" class="w-full"
+            style="max-height: 300px; max-width: 300px; object-fit: cover;">
+          {% endfor %}
         </div>
-        <div class="mt-4">
-          <button type="submit" class="text-white bg-[#594100] rounded p-2 px-4 text-sm font-medium">แสดงความคิดเห็น</button>
-        </div>
-      </form>
+        {% endif %}
+      </div>
+
+
+      <div class="mt-2 flex items-center gap-6 [&>a:hover]:underline">
+
+        {% include 'social_app/likes.html' %}
+        <!-- comment -->
+        <a href="" class="flex items-center gap-1.5">
+          <svg fill="none" viewBox="0 0 24 24" class="w-4 h-4" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+          </svg>
+          <span id="commentscount-{{ post.id }}" class="">{{ comment_count }}</span>
+        </a>
+      </div>
+
+
     </div>
-  </div>
+
+    <!--form comments-->
+    <div class="py-6 flex justify-center mx-auto">
+      <div class="w-full md:mt-0">
+        <form class="relative z-10 h-auto p-8 py-10 overflow-hidden bg-[#FFEC9E] rounded px-7"
+          enctype="multipart/form-data" hx-post="{% url 'comment-sent' post_id=post.id %}" hx-target="#comments-section"
+          hx-swap="afterbegin" _="on htmx:afterRequest reset() me">
+          {% csrf_token %}
+          <div class="">
+            {{ commentform.content }}
+          </div>
+          <div class="mt-4">
+            <button type="submit"
+              class="text-white bg-[#594100] rounded p-2 px-4 text-sm font-medium">แสดงความคิดเห็น</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!--comments section-->
+    <div id="comments-section" class="pb-6">
+      {% for comment in post.comments.all %}
+      {% include 'social_app/comment.html' %}
+      {% endfor %}
+    </div>
 
 
-  <!--comments section-->
-  <div id="comments-section" class="pb-8">
-    {% for comment in post.comments.all %}
-    {% include 'social_app/comment.html' %}
-    {% endfor %}
-  </div>
-
-  </div>
-  </div>
-  </div>
   </div>
 
 
   <script>
-    // Get the menu icon and the user menu
-    const menuIcon = document.getElementById('menu-icon');
-    const userMenu = document.getElementById('navbar-user');
-
-    menuIcon.addEventListener('click', function () {
-      userMenu.classList.toggle('hidden');
-    });
-
-    /*const profileImageButton = document.getElementById('user-menu-button');
-    const userDropdownMenu = document.getElementById('user-dropdown');
-
-    profileImageButton.addEventListener('click', function() {
-      userDropdownMenu.classList.toggle('hidden');
-    }); */
-
-    //open profile
-    function openFunc() {
-      document.getElementById("user-dropdown").classList.toggle("hidden");
-    }
-
-
 
     //reply handle
     const replyIcon = document.getElementById('reply-icon');

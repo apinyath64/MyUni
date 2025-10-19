@@ -23,6 +23,7 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Place)
 admin.site.register(Post)
+admin.site.register(PostImage)
 admin.site.register(Event)
 admin.site.register(EventImage)
 admin.site.register(EventMember)

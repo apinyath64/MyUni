@@ -5,52 +5,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Create Event Page</title>
+    <title>MyUni | Add event</title>
 </head>
 
-<body class="bg-[#FFEC9E] min-h-screen flex items-center justify-center">
-
-    <div class="bg-white border border-[#594100] text-[#594100] max-w-lg p-8 rounded shadow-xl w-full">
-        <div class="">
-            <h1 class="text-xl text-center font-bold mb-4">สร้างกิจกรรม</h1>
-            <form method="post" action="" enctype="multipart/form-data" class="space-y-4">
-                {% csrf_token %}
-                <div class="mb-2">
-                    <label for="title" class="block text-sm font-medium">หัวข้อ:</label>
-                    <input type="text" id="title" name="title" required
-                        class="mt-1 border border-[#594100] p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md">
-                </div>
-                <div class="mb-2">
-                    <label for="detail" class="block text-sm font-medium">รายละเอียด:</label>
-                    <textarea id="detail" name="detail" required rows="3"
-                        class="mt-1 border border-[#594100] p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md"></textarea>
-                </div>
-                <div class="grid grid-cols-2 gap-x-4 mb-2">
-                    <div>
-                        <label for="start_date" class="block text-sm font-medium">เริ่ม:</label>
-                        <input type="datetime-local" id="start_date" name="start_date" required
-                            class="mt-1 border border-[#594100] p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md">
+<body>
+    <div class="min-h-screen bg-[#FFEC9E] p-2 flex items-center justify-center">
+        <div class="bg-white border border-[#594100] text-[#594100] max-w-lg p-8 rounded shadow-xl w-full">
+            <div class="">
+                <h1 class="text-xl text-center font-bold mb-4">สร้างกิจกรรม</h1>
+                <form method="post" action="" enctype="multipart/form-data" class="space-y-4">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <label for="title" class="block text-sm font-medium">หัวข้อ:</label>
+                        <input type="text" id="title" name="title" required
+                            class="mt-1 border border-[#594100] bg-[#F6F0F0] p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md">
                     </div>
-                    <div>
-                        <label for="end_date" class="block text-sm font-medium">สิ้นสุด:</label>
-                        <input type="datetime-local" id="end_date" name="end_date" required
-                            class="mt-1 border border-[#594100] p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md">
+                    <div class="mb-2">
+                        <label for="detail" class="block text-sm font-medium">รายละเอียด:</label>
+                        <textarea id="detail" name="detail" required rows="3"
+                            class="mt-1 border border-[#594100] bg-[#F6F0F0]  p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md"></textarea>
                     </div>
-                </div>
-                <div class="mb-2">
-                    <label for="event_image" class="block text-sm font-medium">เพิ่มรูปภาพ:</label>
-                    <input type="file" id="event_image" name="event_image"
-                        class="mt-1 border border-[#594100] p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md">
-                </div>
+                    <div class="grid grid-cols-2 gap-x-4 mb-2">
+                        <div>
+                            <label for="start_date" class="block text-sm font-medium">เริ่ม:</label>
+                            <input type="datetime-local" id="start_date" name="start_date" required
+                                class="mt-1 border border-[#594100] bg-[#F6F0F0]  p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md">
+                        </div>
+                        <div>
+                            <label for="end_date" class="block text-sm font-medium">สิ้นสุด:</label>
+                            <input type="datetime-local" id="end_date" name="end_date" required
+                                class="mt-1 border border-[#594100] bg-[#F6F0F0] p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md">
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label for="event_image" class="block text-sm font-medium">เพิ่มรูปภาพ:</label>
+                        <input type="file" id="event_image" name="event_image"
+                            class="mt-1 border border-[#594100] bg-[#F6F0F0]  p-2 px-4 focus:ring-gray-300 focus:border-gray-300 block w-full shadow-sm sm:text-sm border-[#594100] rounded-md">
+                    </div>
 
-                <div class="mt-4 flex justify-between">
-                    <button type="submit"
-                        class="py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-[#594100] focus:outline-none focus:ring-2 focus:ring-offset-2">สร้างกิจกรรม</button>
-                    <a href="{% url 'feed' %}?id={{ place_id }}" class="p-2 hover:underline">ย้อนกลับ</a>
-                </div>
-            </form>
+                    <div class="mt-4 flex justify-between">
+                        <button type="submit"
+                            class="py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-[#594100] focus:outline-none focus:ring-2 focus:ring-offset-2">สร้างกิจกรรม</button>
+                        <a href="{% url 'place' %}?id={{ place_id }}" class="p-2 hover:underline">ย้อนกลับ</a>
+                    </div>
+                </form>
+            </div>
+
         </div>
-
     </div>
 </body>
 

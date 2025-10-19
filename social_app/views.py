@@ -1,4 +1,3 @@
-from django.urls import reverse_lazy
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -28,7 +27,7 @@ def create_post(request, place_id):
                 post_image.save()     
             Notification.objects.create(user=request.user, message=f'สร้างโพสต์ใหม่แล้ว: {post.title}')
             
-            return redirect('home')
+            return redirect('post_content', post.id)
         else:
             form = PostForm()
             
@@ -64,7 +63,7 @@ def create_event(request, place_id):
             messages.success(request, 'เพิ่มกิจกรรมสำเร็จ!')
             Notification.objects.create(user=request.user, message=f'เพิ่มกิจกรรมใหม่แล้ว: {event.title}')
             
-            return redirect('home')
+            return redirect('event_details', event.id)
         else:
             for error in list(form.errors.values()):
                 messages.error(request, error)
@@ -95,10 +94,12 @@ def show_event(request):
 def event_calendar(request):
     all_events = Event.objects.all()
     profile = request.user.profile
-    
+    unread_notifications_count = Notification.objects.filter(user=request.user, is_read=False).count() if request.user.is_authenticated else 0
+
     context = {
         "events": all_events,
         "profile": profile,
+        "unread_notifications_count": unread_notifications_count
     }
     return render(request, 'social_app/event_calendar.html', context)
 
@@ -139,7 +140,7 @@ def event_from_calendar(request):
                   
             Notification.objects.create(user=request.user, message=f'เพิ่มกิจกรรมใหม่แล้ว: {event.title}')
             
-            return redirect('event_calendar')
+            return redirect('event_details', event.id)
     else:
         form = EventCalendarForm()     
     referer_url = request.META.get('HTTP_REFERER', '/') 
@@ -149,11 +150,14 @@ def event_details(request, pk):
     event = Event.objects.get(id=pk)
     profile = request.user.profile
     eventmember = EventMember.objects.filter(event=event)
+
+    unread_notifications_count = Notification.objects.filter(user=request.user, is_read=False).count() if request.user.is_authenticated else 0
     
     context = {
         'event': event,
         'profile': profile,
         'eventmember': eventmember,
+        'unread_notifications_count': unread_notifications_count
     }
     return render(request, 'social_app/event_details.html', context)
 
@@ -197,7 +201,7 @@ def event_delete(request, event_id):
     
     if request.method == 'POST':
         event.delete()
-        messages.success(request, 'Event deleted')
+        messages.success(request, 'ลบกิจกรรมสำเร็จ')
         return redirect('event_calendar')
     
     referer_url = request.META.get('HTTP_REFERER', '/')
@@ -205,25 +209,34 @@ def event_delete(request, event_id):
     return render(request, 'social_app/event_delete.html', {'event': event, 'referer_url': referer_url})
 
 def event_edit(request, pk):
-    event = get_object_or_404(Event, id=pk)
+    event = get_object_or_404(Event, id=pk, user=request.user)
+
     if request.method == 'POST':
         form = EventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
             event = form.save(commit=False)
             event.save()
+
+            if 'delete_event_images' in request.POST:
+                img_id = request.POST.getlist('delete_event_images')
+                EventImage.objects.filter(id__in=img_id, event=event).delete()
+
             if 'image' in request.FILES:
-                event_image = EventImage(event=event, image=request.FILES['image'])
-                event_image.save()
+                EventImage.objects.create(event=event, image=request.FILES['image'])
+
+
             return redirect('event_details', pk=event.pk)
     else:
         form = EventForm(instance=event)
         
+    existing_images = event.images.all()
     referer_url = request.META.get('HTTP_REFERER', '/')
-    return render(request, 'social_app/event_edit.html', {'form': form, 'event': event, 'referer_url': referer_url,})
+
+    return render(request, 'social_app/event_edit.html', {'form': form, 'event': event, 'referer_url': referer_url, 'existing_images': existing_images})
 
         
 @login_required(login_url='/login/')
-def feed(request):
+def place_details(request):
     place_id = request.GET.get('id')
     place = get_object_or_404(Place, id=place_id)
     posts = Post.objects.filter(place=place)
@@ -240,7 +253,7 @@ def feed(request):
         
 
     referer_url = request.META.get('HTTP_REFERER', '/')
-    return render(request, 'social_app/feed.html', {
+    return render(request, 'social_app/place_details.html', {
         'place': place, 
         'events': events, 
         'posts': posts,
@@ -261,7 +274,7 @@ def post_content(request, post_id):
     replies = Reply.objects.filter(parent_comment__in=comments)
     
     comment_count = comments.count() + replies.count()
-    print("คอมเม้นทั้งหมด", comment_count)
+    unread_notifications_count = Notification.objects.filter(user=request.user, is_read=False).count() if request.user.is_authenticated else 0
     
     context = {
         'post': post, 
@@ -270,12 +283,62 @@ def post_content(request, post_id):
         'profile': profile,
         'post_id': post_id,
         'replyform': replyform,
-        'referer_url': referer_url
+        'referer_url': referer_url,
+        'unread_notifications_count': unread_notifications_count
     }
     
     return render(request, 'social_app/post_content.html', context)
     
+
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id, user=request.user)
+
+    if request.method == 'POST':
+        post.delete()
+        messages.success(request, 'ลบโพสต์สำเร็จ')
+        return redirect('home')
+
+    context = {
+        'post': post
+    }
     
+    return render(request, 'social_app/delete_post.html', context)
+    
+
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id, user=request.user)
+    
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.save()
+
+
+            # delete current img
+            if 'delete_post_images' in request.POST:
+                img_id = request.POST.getlist('delete_post_images')
+                PostImage.objects.filter(id__in=img_id, post=post).delete()
+
+            #save new img
+            if 'image' in request.FILES:
+                PostImage.objects.create(post=post, image=request.FILES['image'])
+            
+            return redirect('post_content', post.id)
+    else:
+        form = PostForm(instance=post)
+    
+    existing_images = post.images.all()
+    referer_url = request.META.get('HTTP_REFERER', '/')
+
+    context = {
+        'post': post,
+        'form': form,
+        'existing_images': existing_images,
+        'referer_url': referer_url,
+    }
+
+    return render(request, 'social_app/edit_post.html', context)
 
 def comment_sent(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
@@ -403,15 +466,21 @@ def reply_delete(request, reply_id):
 
 def notifications(request):
     user_notifications = Notification.objects.filter(user=request.user, is_read=False)
+    profile = get_object_or_404(Profile, user=request.user)
+    unread_notifications_count = Notification.objects.filter(user=request.user, is_read=False).count() if request.user.is_authenticated else 0
     referer_url = request.META.get('HTTP_REFERER', '/')
+
     return render(request, 'social_app/notifications.html', {
         'notifications': user_notifications,
         'referer_url': referer_url,
+        'profile': profile,
+        'unread_notifications_count': unread_notifications_count
     })
 
 def mark_notifications_as_read(request):
     Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
-    return redirect('notifications')
+    referer_url = request.META.get('HTTP_REFERER', '/')
+    return redirect(referer_url)
     
     
     

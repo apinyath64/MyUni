@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Add event members</title>
+    <title>MyUni | Add event members</title>
 </head>
 <body class="bg-[#FFEC9E]">
-    <div class="md:h-screen flex items-center justify-center text-[#594100]">
-        <div class="bg-white border border-[#594100] px-8 py-4 rounded" style="height: 50vh; width: 50vw;">
+    <div class="min-h-screen flex items-center justify-center text-[#594100] px-4">
+        <div class="w-auto bg-white border border-[#594100] py-2 rounded" >
             <h1 class="text-xl font-bold text-center mt-4">เพิ่มสมาชิกในกิจกรรม</h1>
             <div class="rounded p-6 mt-4">
                 <p>เพิ่มสมาชิกไปยังกิจกรรม <span class="text-lg font-semibold"> {{ event.title }}</span></p>
@@ -20,7 +20,7 @@
                             {{ form.member }}
                         </div>
                         <tr>
-                            <td colspan="2" class="py-4 mt-8 flex justify-center gap-12">
+                            <td colspan="2" class="py-4 mt-8 flex items-center justify-between">
                                 <button type="submit" class="bg-[#594100] text-white p-2 px-4 rounded">เพิ่มสมาชิก</button>
                                 <a href="{{ referer_url }}" class="px-4 py-2 hover:underline">ย้อนกลับ</a>
                             </td>
