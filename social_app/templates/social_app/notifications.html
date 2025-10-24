@@ -12,16 +12,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/3.1.2/flowbite.js"
         integrity="sha512-c9m0HP/+jR+ZgMbKqLHtvn8nT0IiJiw0NhgSWedfZWi1QvGS39Kz2w4Sbo7rD1eYA+fm7ypCLNR0gbAJv2mHQA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet" />
+    
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive;
+        }
+    </style>
 </head>
 
 <body>
 
-    <nav class="px-6 bg-[#FFEC9E] py-4" style="font-family: 'Pacifico', cursive; ">
+    <nav class="px-6 bg-[#FFEC9E] py-4" >
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
 
             <a href="{% url 'home' %}" class="text-[#594100] flex items-center space-x-3 rtl:space-x-reverse">
-                <span class="logo self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MyUni</span>
+                <span class="self-center text-2xl font-bold whitespace-nowrap dark:text-white">MyUni</span>
             </a>
 
             <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -93,8 +98,7 @@
             </button>
 
             <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-                <ul class="flex flex-col font-medium p-4 md:p-0 mt-4  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
-                    style="font-family: 'Pacifico' ">
+                <ul class="flex flex-col font-medium p-4 md:p-0 mt-4  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
 
                     <li>
                         <a href="{% url 'event_calendar' %}"

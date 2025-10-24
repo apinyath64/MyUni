@@ -10,7 +10,6 @@
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://unpkg.com/htmx.org@1.9.12"></script>
   <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/3.1.2/flowbite.js"
     integrity="sha512-c9m0HP/+jR+ZgMbKqLHtvn8nT0IiJiw0NhgSWedfZWi1QvGS39Kz2w4Sbo7rD1eYA+fm7ypCLNR0gbAJv2mHQA=="
@@ -18,6 +17,10 @@
     </script>
   <title>MyUni | Post content</title>
   <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background-color: #FBF8EF;
+    }
     nav {
       position: absolute;
       top: 0;
@@ -28,12 +31,12 @@
 
 </head>
 
-<body class="bg-[#FBF8EF]">
-  <nav class="px-6 py-4 bg-[#FFEC9E]" style="font-family: 'Pacifico', cursive; ">
+<body>
+  <nav class="px-6 py-4 bg-[#FFEC9E]">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto mt-4 ">
 
       <a href="{% url 'home' %}" class="text-[#594100] flex items-center space-x-3 rtl:space-x-reverse">
-        <span class="logo self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MyUni</span>
+        <span class="self-center text-2xl font-bold whitespace-nowrap dark:text-white">MyUni</span>
       </a>
 
       <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -101,8 +104,7 @@
 
       <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
         <ul
-          class="flex flex-col font-medium p-4 md:p-0 mt-4  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
-          style="font-family: 'Pacifico' ">
+          class="flex flex-col font-medium p-4 md:p-0 mt-4  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
 
           <li>
             <a href="{% url 'home' %}"

@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.db.models import Count
 from django.core.mail import EmailMessage
+import smtplib
+import time
 import json
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
@@ -17,6 +19,9 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 from .tokens import account_activatin_token
 import logging
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+import os
 # from django.contrib.auth import get_user_model
 
 #User = get_user_model()
@@ -155,14 +160,7 @@ def delete_user_account(request, user_id):
     
     return render(request, 'home/accounts_delete.html', context)
 
-# @login_required
-# def password_change(request):
-#     user = request.user
-#     form = SetPasswordForm(user)
-#     return render(request, 'home/password_reset.html', {'form': form})
-
 def activate(request, uidb64, token):
-    user = get_user_model()
     try: 
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -176,11 +174,11 @@ def activate(request, uidb64, token):
         messages.success(request, "ขอบคุณสำหรับการยืนยันอีเมล. ตอนนี้คุณสามารถเข้าสู่ระบบบัญชีของคุณ.")
         return redirect('login_user')
     else: 
-        messages.error(request, "Activation link is invalid!")
+        messages.error(request, "ลิงก์สำหรับยืนยันการเปิดใช้งานไม่ถูกต้อง!")
         return redirect('home')
 
 def activateEmail(request, user, to_email):
-    mail_subject = "เปิดใช้งานบัญชีผู้ใช้ของคุณ."
+    mail_subject = "เปิดใช้งานบัญชีผู้ใช้ MyUni"
     message = render_to_string("home/template_activate_account.html", {
         'user': user.username,
         'domain': get_current_site(request).domain,
@@ -188,11 +186,21 @@ def activateEmail(request, user, to_email):
         'token': account_activatin_token.make_token(user),
         'protocol': 'https' if request.is_secure() else 'http'
     })
-    email = EmailMessage(mail_subject, message, to=[to_email])
-    if email.send():
-        messages.success(request, f'ถึง <b>{user.username}</b>, กรุณาไปที่อีเมล <b>{to_email}</b> ตรวจสอบกล่องข้อความและคลิกลิงก์การเปิดใช้งานที่ได้รับ เพื่อยืนยันและดำเนินการสมัครให้เสร็จสมบูรณ์ <b>Note:</b> ตรวจสอบโฟลเดอร์สแปมของคุณ')
-    else:
-        messages.error(request, f'ส่งอีเมลไปยัง {to_email} ไม่สำเร็จ, ตรวจสอบว่าคุณพิมพ์ถูกต้องหรือไม่')
+    email = Mail(
+        from_email='apinya.tho.64@ubu.ac.th',
+        to_emails=to_email,
+        subject=mail_subject,
+        html_content=message
+    )
+
+    try:
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        sg.send(email)
+        messages.success(request, f'ถึง {user.username}, กรุณาไปที่อีเมล {to_email} เพื่อตรวจสอบและยืนยันบัญชีของคุณ.')
+    except Exception as e:
+        logging.error(f'SendGrid error: {e}')
+        messages.error(request, f'ไม่สามารถส่งอีเมลไปยัง {to_email} โปรดลองอีกครั้งในภายหลัง')
+
 
 def signup(request):
     if request.method == 'POST':
@@ -201,13 +209,14 @@ def signup(request):
             user = form.save(commit=False)
             user.is_active=False
             user.save()
-            
+
+            Profile.objects.create(user=user)
+
             try:
                 activateEmail(request, user, form.cleaned_data.get('email'))
-                #create profile
-                Profile.objects.create(user=user)
                 messages.success(request, "โปรดตรวจสอบอีเมลของคุณเพื่อยืนยันบัญชี")
-                return redirect('home')
+                return redirect('login_user')
+            
             except Exception as e:
                 logging.error(f"Failed to send activation email: {e}")
                 messages.error(request, "เกิดข้อผิดพลาดในการส่งอีเมลยืนยัน โปรดลองอีกครั้ง")

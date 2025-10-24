@@ -18,7 +18,7 @@ class Profile(models.Model):
         symmetrical=False,
         blank=True)
     bio = models.TextField(blank=True)
-    profileimg = models.ImageField(upload_to='profile_images', default='default-profile.png')
+    profileimg = models.ImageField(upload_to='profile_images', default='default-profile.jpg')
     location = models.CharField(max_length=100, blank=True)
     
     def __str__(self):

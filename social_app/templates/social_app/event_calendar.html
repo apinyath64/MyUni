@@ -14,13 +14,16 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" 
     integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" 
     crossorigin="anonymous" 
     referrerpolicy="no-referrer" 
   />
   <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background-color: #FFEC9E;
+    }
     .fc-day-grid-event {
       background: #5DADE2;
       border: 2px solid #5DADE2;
@@ -35,9 +38,6 @@
       color: #ffffff;
     }
 
-    .logo-font {
-      font-family: 'Pacifico', cursive;
-    }
     nav {
       position: absolute;
       top: 0;
@@ -47,13 +47,13 @@
   </style>
 </head>
 
-<body class="bg-[#FFEC9E]">
+<body>
 
-  <nav class="px-6" style="font-family: 'Pacifico', cursive; ">
+  <nav class="px-6">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto mt-4 ">
 
       <a href="{% url 'home' %}" class="text-[#594100] flex items-center space-x-3 rtl:space-x-reverse">
-        <span class="logo self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MyUni</span>
+        <span class="self-center text-2xl font-bold whitespace-nowrap dark:text-white">MyUni</span>
       </a>
 
       <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -121,8 +121,7 @@
 
       <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
         <ul
-          class="flex flex-col font-medium p-4 md:p-0 mt-4  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
-          style="font-family: 'Pacifico' ">
+          class="flex flex-col font-medium p-4 md:p-0 mt-4  md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
 
           <li>
             <a href="{% url 'home' %}"
@@ -152,7 +151,7 @@
     <div class="flex flex-col">
 
       <div class="w-full px-4 sm:px-6 lg:px-12 py-6 lg:py-10">
-        <div class="flex flex-col items-center justify-center py-8" style="font-family: 'Pacifico', cursive;">
+        <div class="flex flex-col items-center justify-center py-8">
           <h1 class="text-xl font-semibold mb-2 text-[#594100]">ปฏิทินกิจกรรมภายในมหาวิทยาลัย</h1>
           <p class="text-[#594100]">กิจกรรมทั้งหมดที่ถูกสร้างจะแสดงที่นี่ <i class="fa-solid fa-hand-point-down"></i></p>
         </div>

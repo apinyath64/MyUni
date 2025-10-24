@@ -6,15 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <title>MyUni | Signup</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background-color: #FFEC9E;
+    }
+  </style>
 
 </head>
 
-<body class="bg-[#FFEC9E]">
+<body>
 
   <div class="min-h-screen flex flex-col items-center justify-center text-[#594100] py-6 px-2">
     <div class="text-center mt-8 mb-6 max-w-2xl">
-      <h1 style="font-family: 'Pacifico', cursive;"
-        class="text-3xl md:text-4xl lg:text-5xl text-center mb-4 font-semibold">
+      <h1 class="text-3xl md:text-4xl lg:text-5xl text-center mb-4 font-semibold">
         ยินดีต้อนรับเข้าสู่ MyUni
       </h1>
       <p class="text-lg md:text-xl text-gray-700 mb-2">
@@ -40,49 +45,34 @@
       </div>
     </div>
 
+    {% if messages %}
+    {% for message in messages %}
+    <div class="message-box my-2 p-2 px-4 rounded w-full max-w-md mx-auto 
+      {% if 'success' in message.tags %} bg-green-100 bg-opacity-60 border border-green-400 text-green-700
+      {% elif 'error' in message.tags %} bg-red-100 bg-opacity-60 border border-red-400 text-red-700 
+      {% else %} bg-blue-100 bg-opacity-60 border border-blue-400 text-blue-700 
+      {% endif %}">
+        <p class="">{{ message }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+    
     <div class="bg-white border border-[#594100] px-4 sm:px-8 md:px-12 py-6 md:py-8 rounded w-full max-w-md mx-auto">
-      <div class="p-4 space-y-4 md:space-y-6 sm:p-8">
         <h1 class="text-xl text-center font-bold leading-tight tracking-tight md:text-2xl">
-          สร้างบัญชีผู้ใช้ของคุณ
+            สร้างบัญชีผู้ใช้ของคุณ
         </h1>
         <form class="space-y-4 md:space-y-6" method="post" action="{% url 'signup' %}">
           {% csrf_token %}
+          {% for field in form %}
           <div>
-            <label for="first_name" class="block text-sm font-medium">ชื่อ</label>
-            <input type="text" id="first_name" name="first_name"
-              class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
-              placeholder="Jane">
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div class="test-xs text-red-600 mt-1">{{ field.errors.0 }}</div>
+            {% endif %}
           </div>
-          <div>
-            <label for="last_name" class="block text-sm font-medium">นามสกุล</label>
-            <input type="text" id="last_name" name="last_name"
-              class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
-              placeholder="Doe">
-          </div>
-          <div>
-            <label for="username" class="block text-sm font-medium">ชื่อผู้ใช้</label>
-            <input type="text" id="username" name="username" required
-              class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
-              placeholder="Jane">
-          </div>
-          <div>
-            <label for="email" class="block text-sm font-medium">อีเมล</label>
-            <input type="email" id="email" name="email" required
-              class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
-              placeholder="email.example@co.th">
-          </div>
-          <div>
-            <label for="password1" class="block text-sm font-medium">รหัสผ่าน</label>
-            <input type="password" id="password1" name="password1" required
-              class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
-              placeholder="••••••••">
-          </div>
-          <div>
-            <label for="password2" class="block text-sm font-medium">ยืนยันรหัสผ่าน</label>
-            <input type="password" id="password2" name="password2" required
-              class="mt-1 focus:ring-gray-300 focus:border-gray-300 block w-full sm:text-sm border border-[#594100] rounded p-2 px-4"
-              placeholder="••••••••">
-          </div>
+          {% endfor %}
+  
           <button type="submit"
             class="w-full text-white bg-[#594100] focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded text-sm px-4 p-2 text-center">
             สร้างบัญชี
@@ -92,7 +82,6 @@
               class="font-medium text-blue-600 hover:underline">เข้าสู่ระบบที่นี่</a>
           </p>
         </form>
-      </div>
     </div>
   </div>
 
